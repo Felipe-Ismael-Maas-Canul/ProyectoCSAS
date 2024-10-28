@@ -1,0 +1,219 @@
+<!--PRIMERA PARTE-->
+<!--La parte de los Datos demográficos de los usuarios -->
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-sm-10">
+      <div class="row container">
+        <h1 class="demo-title">Datos Demográficos</h1>
+        <hr class="custom-hr">
+
+        <!-- Para ingresar datos o pedir los datos a los usuarios -->
+        <form [formGroup]="cuestionarioForm" (ngSubmit)="onSubmit()">
+          <div class="row mt-4">
+            <div class="col-4">
+              <label for="form-matricula" class="form-label title">1. Matrícula</label>
+              <input id="form-matricula" type="text" class="form-control" formControlName="matricula">
+              <div *ngIf="matricula?.invalid && (matricula?.dirty || matricula?.touched)" class="text-danger">
+                <div *ngIf="matricula?.errors?.['required']">
+                  La matrícula es obligatoria.
+                </div>
+                <div *ngIf="matricula?.errors?.['pattern']">
+                  La matrícula debe ser un número de 4 o 6 dígitos.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Esta parte es para lo del genero -->
+          <div class="row mt-4">
+            <div class="col-4">
+              <label class="form-label title">2. Género</label>
+              <div class="form-check">
+                <label class="form-check-label"><input class="form-check-input" type="radio" formControlName="genero" value="masculino"> Masculino</label>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label"><input class="form-check-input" type="radio" formControlName="genero" value="femenino"> Femenino</label>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label"><input class="form-check-input" type="radio" formControlName="genero" value="otro"> Otro</label>
+              </div>
+              <div *ngIf="genero?.invalid && (genero?.dirty || genero?.touched)" class="text-danger">
+                El género es obligatorio.
+              </div>
+              <div *ngIf="genero?.value === 'otro'">
+                <input type="text" class="form-control mt-2" formControlName="otroGenero" placeholder="Especifique su género">
+                <div *ngIf="otroGenero?.invalid && (otroGenero?.dirty || otroGenero?.touched)" class="text-danger">
+                  Especifique su género es obligatorio.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Aquí va la parte de Edad -->
+          <div class="row mt-4">
+            <div class="col-4">
+              <label for="form-edad" class="form-label title">3. Edad</label>
+              <div class="input-group">
+                <input id="form-edad" type="number" class="form-control" formControlName="edad" min="0" max="999" placeholder="Introduce tu edad">
+                <span class="input-group-text">años</span>
+              </div>
+              <div *ngIf="edad?.invalid && (edad?.dirty || edad?.touched)" class="text-danger">
+                <div *ngIf="edad?.errors?.['required']">
+                  La edad es obligatoria.
+                </div>
+                <div *ngIf="edad?.errors?.['min']">
+                  La edad no puede ser menor de 0.
+                </div>
+                <div *ngIf="edad?.errors?.['max']">
+                  La edad no puede ser mayor de 999.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Esta es la primera pregunta de opción múltiple -->
+          <div class="row mt-4">
+            <div class="col-4">
+              <label class="form-label title">4. Lo que te describe mejor:</label>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" id="opcion1" formControlName="descripcion" value="Estudiante actual de secundaria">
+                <label class="form-check-label" for="opcion1">Estudiante actual de secundaria</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" id="opcion2" formControlName="descripcion" value="Estudiante universitario actual">
+                <label class="form-check-label" for="opcion2">Estudiante universitario actual</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" id="opcion3" formControlName="descripcion" value="Universidad graduada en el último año">
+                <label class="form-check-label" for="opcion3">Universidad graduada en el último año</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" id="opcion4" formControlName="descripcion" value="Estudiante graduado">
+                <label class="form-check-label" for="opcion4">Estudiante graduado</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" id="opcion5" formControlName="descripcion" value="Otro">
+                <label class="form-check-label" for="opcion5">Otro</label>
+              </div>
+              <div *ngIf="descripcion?.invalid && (descripcion?.dirty || descripcion?.touched)" class="text-danger">
+                La descripción es obligatoria.
+              </div>
+              <div *ngIf="descripcion?.value === 'Otro'">
+                <input type="text" class="form-control mt-2" formControlName="otroDescripcion" placeholder="Especifique su descripción">
+                <div *ngIf="otroDescripcion?.invalid && (otroDescripcion?.dirty || otroDescripcion?.touched)" class="text-danger">
+                  Especificar su descripción es obligatorio.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!--Aqui van las preguntas de opciones SI y NO-->
+          <div *ngFor="let question of questions; let i = index" class="question-container mt-4">
+            <div class="question-header title">
+              <p><strong>{{ question }}</strong></p>
+            </div>
+            <div class="options-container">
+              <label class="form-check-label me-3" *ngFor="let option of options; let j = index">
+                <input
+                  class="form-check-input me-2"
+                  type="radio"
+                  [formControlName]="'question' + (i + 1)"
+                  [value]="option">
+                <span>{{ option }}</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Pregunta abierta -->
+          <div class="question-container mt-4">
+            <div class="question-header title">
+              <p><strong>8. Si ha trabajado como voluntario en los últimos doce meses, ¿Cuántas horas de trabajo voluntario por semana en promedio?</strong></p>
+            </div>
+            <div class="options-container">
+              <input
+                type="text"
+                class="form-control question8-input"
+                formControlName="question8"
+                placeholder="Escribe el número de horas">
+              <div *ngIf="question8?.invalid && (question8?.dirty || question8?.touched)" class="text-danger">
+                Esta pregunta es obligatoria.
+              </div>
+            </div>
+          </div>
+
+          <!-- Segunda Pregunta de opción múltiple -->
+            <div class="question-container mt-4">
+              <div class="question-header title">
+                <p><strong>9. ¿Has participado en un Descanso Alternativo?</strong></p>
+              </div>
+              <div class="options-container">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    id="option1"
+                    formControlName="participacion"
+                    value="Si, solo uno">
+                  <label class="form-check-label" for="option1">
+                    Si, solo uno.
+                  </label>
+                </div>
+
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    id="option2"
+                    formControlName="participacion"
+                    value="Si, dos">
+                  <label class="form-check-label" for="option2">
+                    Si, dos.
+                  </label>
+                </div>
+
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    id="option3"
+                    formControlName="participacion"
+                    value="Sí, tres o más">
+                  <label class="form-check-label" for="option3">
+                    Sí, tres o más.
+                  </label>
+                </div>
+
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    id="option4"
+                    formControlName="participacion"
+                    value="No">
+                  <label class="form-check-label" for="option4">
+                    No
+                  </label>
+                </div>
+
+                <div *ngIf="participacion?.invalid && (participacion?.dirty || participacion?.touched)" class="text-danger">
+                  Debe seleccionar una opción.
+                </div>
+              </div>
+            </div>
+
+            <br>
+            <hr class="custom-hr">
+
+          <!-- La parte del boton -->
+          <div class="row mt-4">
+            <div class="col-12 text-end">
+              <!-- Botón Siguiente -->
+              <button type="button" (click)="nextPage()" class="btn">Siguiente</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
