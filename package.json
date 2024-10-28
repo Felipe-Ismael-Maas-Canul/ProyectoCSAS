@@ -23,6 +23,7 @@
     "@angular/ssr": "^18.2.1",
     "bootstrap": "^5.3.3",
     "express": "^4.18.2",
+    "proyecto-csas": "file:",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.12.4",
     "tslib": "^2.3.0",
