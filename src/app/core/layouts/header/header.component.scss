@@ -1,4 +1,4 @@
-//Importaciones de las tipografias usadas
+// Importaciones de las tipografías usadas
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
@@ -15,9 +15,23 @@
   color: #2C3E50; /* Color Azul Marino */
 }
 
-//Estilo para la parte del navbar
+// Estilo para la parte del navbar
 .custom-navbar {
   background-color: #2C3E50; /* Fondo en Azul Marino */
+  padding: 15px 20px; /* Espaciado alrededor */
+  display: flex;
+  align-items: center;
+}
+
+.custom-navbar .navbar-brand {
+  display: flex;
+  align-items: center;
+}
+
+.custom-navbar .navbar-brand img {
+  width: 65px; /* Tamaño del logo */
+  height: 65px;
+  margin-right: 15px; /* Espaciado entre logo y texto */
 }
 
 .custom-navbar-text {
@@ -25,4 +39,5 @@
   font-family: "Merriweather Sans", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
+  font-size: 1.25rem; /* Tamaño de fuente del texto */
 }

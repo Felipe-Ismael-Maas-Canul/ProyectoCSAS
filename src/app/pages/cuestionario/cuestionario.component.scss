@@ -82,22 +82,35 @@
 }
 
 
-//Estilo para el boton
-.btn {
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 8px;
-  border: 2px solid #2C3E50;
-  box-shadow: 0 0 6px #2C3E50;
-  transition: box-shadow .4s ease, background-color .4s ease, color .4s ease;
-  cursor: pointer;
-  background-color: #2C3E50;
-  color: #FFFFFF;
 
-  &:hover {
-    box-shadow: 0 0 15px #2980B9;
-    background-color: #1ABC9C;
-    color: #FFFFFF;
-    font-weight: bold;
-  }
+
+/* Estilo base para los botones */
+.page-link {
+  color: #17a2b8;
+  background-color: white; /* Azul Bootstrap o color base de tu paleta */
+  border: 1px solid #17a2b8;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hover: cuando el cursor está sobre el botón */
+.page-link:hover {
+  background-color: #138496; /* Un tono más oscuro que el color base */
+  color: white; /* Texto permanece blanco */
+  border-color: #138496;
+  cursor: pointer;
+}
+
+/* Active: cuando el botón es clicado */
+.page-link:active {
+  background-color: #0f6674; /* Un color más oscuro para el clic */
+  color: white;
+  border-color: #0f6674;
+  transform: scale(0.98); /* Simulación de 'presionado' */
+}
+
+/* Para el botón deshabilitado (opcional) */
+.page-item.disabled .page-link {
+  background-color: #e0e0e0;
+  color: #6c757d;
+  border-color: #e0e0e0;
 }

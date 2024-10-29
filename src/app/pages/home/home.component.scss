@@ -1,0 +1,78 @@
+
+.home-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: #f5f5f5;
+
+  .wave-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-image: url('/assets/Imagen/Wave-vector.png'); /* Ruta de la imagen */
+    background-repeat: no-repeat;
+    background-size: cover; /* Cubre todo el fondo */
+    background-position: center; /* Centra la imagen */
+    z-index: -1; /* Coloca el fondo detrás del contenido */
+  }
+
+  .content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 80%;
+    z-index: 1; /* Asegura que el contenido esté sobre el fondo */
+    background-color: transparent; /* Sin fondo para dejar ver el fondo wave */
+
+    .text-content {
+      text-align: center;
+      margin-right: 30px; /* Espacio entre el texto y la imagen */
+      color: #333;
+
+      .title {
+        font-size: 3em;
+        font-weight: bold;
+        margin: 0;
+      }
+
+      .subtitle {
+        font-size: 1.5em;
+        color: #cc71c6;
+        margin: 10px 0;
+      }
+
+      .login-button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #4fb6a6;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em;
+
+        &:hover {
+          background-color: #3a8e80;
+        }
+      }
+    }
+
+    .image-content {
+      max-width: 80%; /* Ajusta el ancho máximo de la imagen */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .decorative-image {
+        width: 100%; /* Hace que la imagen ocupe todo el ancho del contenedor */
+        max-width: 400px; /* Tamaño máximo de la imagen */
+      }
+    }
+  }
+}

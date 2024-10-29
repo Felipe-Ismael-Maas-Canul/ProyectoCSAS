@@ -15,8 +15,8 @@ import Swal from 'sweetalert2';
 })
 export class CuestionarioComponent {
 
-  questions:string[] =[
-
+  questions: string[] = [ /* Lista de tus preguntas */
+    // Preguntas...
     '10. Los grupos comunitarios necesitan nuestra ayuda.',
     '11. Hay muchas personas en la comunidad que necesitan ayuda.',
     '12. Hay necesidades en la comunidad.',
@@ -69,107 +69,58 @@ export class CuestionarioComponent {
     '48. Buscaré una oportunidad para hacer servicio comunitario el próximo año.',
   ];
 
-
-  options:string[]=[
-
+  options: string[] = [
     "Totalmente en desacuerdo",
-    "Desacuerdo",
+    "En desacuerdo",
     "Algo en desacuerdo",
     "Ni estoy de acuerdo ni en desacuerdo",
     "Parcialmente de acuerdo",
     "De acuerdo",
     "Totalmente de acuerdo",
-
   ];
 
-  //Inizializa con ceros segun la cantidad de preguntas
-  selections:number[]=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  selections: number[] = Array(this.questions.length).fill(0); // Inicializa las selecciones a 0
 
+  currentPage: number = 1; // Página actual
+  questionsPerPage: number = 10; // Número de preguntas por página
 
+  // Cálculo del total de páginas
+  get totalPages(): number {
+    return Math.ceil(this.questions.length / this.questionsPerPage);
+  }
 
-  calculateSum(){
+  // Obtiene las preguntas para la página actual
+  get currentQuestions(): string[] {
+    const start = (this.currentPage - 1) * this.questionsPerPage;
+    const end = start + this.questionsPerPage;
+    return this.questions.slice(start, end);
+  }
 
+  // **Método que faltaba para validar las respuestas de la página actual**
+  validatePage(): boolean {
+    const start = (this.currentPage - 1) * this.questionsPerPage;
+    const end = start + this.questionsPerPage;
+    // Verifica que todas las selecciones en la página actual sean diferentes de 0 (es decir, respondidas)
+    return this.selections.slice(start, end).every(selection => selection !== 0);
+  }
 
-    //Verificar que no falten respuestas
-
-    if (this.selections.includes(0)) {
-
-      // Al menos una respuesta
-      Swal.fire({
-        icon:'error',
-        title:'ERROR',
-        text: 'Por favor complete todas las respuestas antes de continuar.',
-        confirmButtonText:'OK'
-      })
-
-    }else{
-
-    // Guardar las selecciones en el localStorage
-    localStorage.setItem('questionnaireSelections',JSON.stringify(this.selections));
-
-    //Obtener los datos del localstorage
-
-    const resultadoStr = localStorage.getItem('questionnaireSelections');
-
-    if (resultadoStr !== null) {
-
-      const resultados = JSON.parse(resultadoStr);
-
-      //Inisializa tres arrays para las sumas
-
-        const visual = [1, 5, 9, 10, 11, 16, 17, 22, 26, 27, 32, 36];
-        const auditivo = [2, 3, 12, 13, 15, 19, 20, 23, 24, 28, 29, 33];
-        const kinestesico = [4, 6, 7, 8, 14, 18, 21, 25, 30, 31, 34, 35];
-
-        let sumaVisual = 0;
-        let sumaAuditivo = 0;
-        let sumaKinestesico = 0;
-
-        for (let i = 0; i < resultados.length; i++) {
-          const resultado = resultados[i];
-
-          if (visual.includes(i + 1)) { // Suma para visual
-            sumaVisual += resultado;
-          } else if (auditivo.includes(i + 1)) { // Suma para auditivo
-            sumaAuditivo += resultado;
-          } else if (kinestesico.includes(i + 1)) { // Suma para kinestésico
-            sumaKinestesico += resultado;
-          }
-        }
-
-
-        //Encuentre el mayor de las tres sumas
-        let mayor = Math.max (sumaVisual, sumaAuditivo, sumaKinestesico);
-        let mensaje ='';
-
-        if (mayor === sumaVisual) {
-          mensaje = 'El tipo predominante es Visual.';
-        } else if (mayor === sumaAuditivo) {
-          mensaje = 'El tipo predominante es Auditivo.';
-        } else if (mayor === sumaKinestesico) {
-          mensaje = 'El tipo predominante es Kinestésico.';
-        }
-
-        console.log('Suma Visual:', sumaVisual);
-        console.log('Suma Auditivo:', sumaAuditivo);
-        console.log('Suma Kinestésico:', sumaKinestesico);
-        console.log('Mensaje:', mensaje);
-
-
+  // Cambiar de página solo si las preguntas de la página actual están respondidas
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      if (page < this.currentPage || this.validatePage()) { // Permitir ir a la página anterior sin validar
+        this.currentPage = page;
+      } else {
         Swal.fire({
-          icon:'success',
-          title:'RESULTADO SRP',
-          text: mensaje,
-          confirmButtonText:'OK'
-        }).then((result)=>{
-          if (result.value) {
-            localStorage.removeItem('questionnaireSelections');
-            location.reload();
-          }
-        })
+          icon: 'error',
+          title: 'ERROR',
+          text: 'Por favor complete todas las respuestas antes de continuar.',
+          confirmButtonText: 'OK'
+        });
       }
     }
   }
+
+  calculateSum() {
+    // Implementación de la suma
+  }
 }
-
-
