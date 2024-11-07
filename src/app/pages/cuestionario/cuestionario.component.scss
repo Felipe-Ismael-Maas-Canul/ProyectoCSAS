@@ -1,116 +1,96 @@
-//Importaciones de las tipografias usadas
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap');
+// Estilos de tipografía y colores
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900&display=swap');
 
-// Estilos globales
-.body {
-  background-color: #FFFFFF; /* Fondo Principal Blanco */
-  color: #2C3E50; /* Texto en Azul Marino */
-  font-family: 'Lato', sans-serif; /* Fuente Principal */
+// Configuración global de colores y fuentes
+body {
+  background-color: #FFFFFF;
+  color: #2C3E50;
+  font-family: 'Lato', sans-serif;
 }
 
-.h1, .h2, .h3, .h4, .h5, .h6 {
-  font-family: 'Merriweather', serif; /* Fuente para Encabezados */
-  color: #2C3E50; /* Color Azul Marino */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Merriweather', serif;
+  color: #2C3E50;
 }
 
-//Esta parte es el estilo del titulo
-.text-title {
-  color: #2C3E50; /* Azul Marino */
-  font-family: "Merriweather Sans", sans-serif;
+// Encabezados de texto
+.text-title, .text-title2 {
+  font-family: 'Merriweather Sans', sans-serif;
   font-optical-sizing: auto;
-  font-style: normal;
 }
 
-.custom-hr {
-  border: 3px solid #7F8C8D; /* Gris Oscuro y más gruesa */
-  width: 100%; /* Ajusta el ancho si es necesario */
-  margin-top: 0.5rem; /* Espacio opcional entre el texto y la línea */
-}
-
-.text-title2 {
-  color: #1ABC9C; /* Verde sueve */
-  font-family: "Merriweather Sans", sans-serif;
-  font-optical-sizing: auto;
-  font-style: normal;
-}
-
-
-// Estilos para alinear las opciones y los radios
+// Personalización de las opciones
 .question-container {
-  margin-bottom: 1.5rem; // Espacio entre preguntas
+  margin-bottom: 1.5rem;
 }
 
 .question-header {
-  background-color: #2C3E50; // Color de fondo gris oscuro
-  font-weight: bold; /* Extra-bold, muy grueso */
-  color: #f8f9fa; // Color del texto blanco
-  font-family: 'Lato', sans-serif;
-  font-size: 17px;
-  font-optical-sizing: auto;
-  font-style: normal;
-  padding: 0.5rem; // Espaciado interior
-  border-radius: 0.25rem 0.25rem 0 0; // Esquinas redondeadas en la parte superior
+  background-color: #2C3E50;
+  color: #f8f9fa;
+  padding: 0.5rem;
+  border-radius: 0.25rem 0.25rem 0 0;
+  font-weight: bold;
 }
 
 .options-container {
-  display: flex; // Utiliza flexbox para alinear elementos
-  justify-content: space-between; // Espacio entre las opciones
-  align-items: center; // Alinea verticalmente los elementos
-  background-color: #1ABC9C; // Color de fondo
-  font-weight: bold; /* Extra-bold, muy grueso */
-  font-family: 'Lato', sans-serif;
-  font-size: 17px;
-  font-optical-sizing: auto;
-  font-style: normal;
-  padding: 1rem; // Espaciado interior
-  border: 1px solid #ddd; // Borde alrededor del contenedor de opciones
-  border-radius: 0 0 0.25rem 0.25rem; // Esquinas redondeadas en la parte inferior
+  display: flex;
+  justify-content: space-between;
+  background-color: #1ABC9C;
+  padding: 1rem;
+  border-radius: 0 0 0.25rem 0.25rem;
 }
 
 .form-check-label {
-  display: flex; // Flexbox en el label
-  flex-direction: column; // Coloca el texto encima del input
-  align-items: center; // Alinea el contenido al centro
-  text-align: center; // Centra el texto
-  margin: 0 0.5rem; // Espaciado horizontal entre las opciones
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: 0 0.5rem;
 }
 
 .form-check-input {
-  margin-top: 0.5rem; // Espacio entre el texto y el input
+  margin-top: 0.5rem;
 }
 
-
-
-
-/* Estilo base para los botones */
+// Estilos de la paginación
 .page-link {
   color: #17a2b8;
-  background-color: white; /* Azul Bootstrap o color base de tu paleta */
+  background-color: white;
   border: 1px solid #17a2b8;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Hover: cuando el cursor está sobre el botón */
 .page-link:hover {
-  background-color: #138496; /* Un tono más oscuro que el color base */
-  color: white; /* Texto permanece blanco */
-  border-color: #138496;
-  cursor: pointer;
-}
-
-/* Active: cuando el botón es clicado */
-.page-link:active {
-  background-color: #0f6674; /* Un color más oscuro para el clic */
+  background-color: #138496;
   color: white;
-  border-color: #0f6674;
-  transform: scale(0.98); /* Simulación de 'presionado' */
 }
 
-/* Para el botón deshabilitado (opcional) */
+.page-link:active {
+  background-color: #3eaca0;
+  color: white;
+  transform: scale(0.98);
+}
+
 .page-item.disabled .page-link {
   background-color: #e0e0e0;
   color: #6c757d;
   border-color: #e0e0e0;
 }
+
+/* Clase para resaltar la página activa */
+.active-page .page-link {
+  background-color: #53c1b4; /* Color verde para la página activa */
+  color: white; /* Texto blanco para la página activa */
+  font-weight: bold;
+}
+
+.page-item .page-link {
+  color: black; /* Color por defecto para las páginas no activas */
+}
+
+.page-item .page-link:hover {
+  background-color: #f0f0f0; /* Color de fondo cuando el usuario pasa el cursor por encima */
+}
+

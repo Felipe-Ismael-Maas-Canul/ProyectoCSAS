@@ -1,4 +1,4 @@
-<!--Aqui van las preguntas del cuestionario-->
+<!-- Aquí van las preguntas del cuestionario -->
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-sm-12">
@@ -16,12 +16,17 @@
               <p><strong>{{ question }}</strong></p>
             </div>
             <div class="options-container">
-              <label class="form-check-label" *ngFor="let option of options; let j = index">
-                <span>{{ option }}</span>
-                <input class="form-check-input" type="radio" [(ngModel)]="selections[(currentPage - 1) * questionsPerPage + i]"
-                  [value]="j+1"
-                  [name]="'question' + ((currentPage - 1) * questionsPerPage + i)">
-              </label>
+              <ng-container *ngFor="let option of options; let j = index">
+                <label class="form-check-label">
+                  <span>{{ option }}</span>
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    [(ngModel)]="selections[(currentPage - 1) * questionsPerPage + i]"
+                    [value]="j+1"
+                    [name]="'question' + ((currentPage - 1) * questionsPerPage + i)">
+                </label>
+              </ng-container>
             </div>
           </div>
         </form>
@@ -32,21 +37,22 @@
             <li class="page-item" [class.disabled]="currentPage === 1">
               <a class="page-link" (click)="goToPage(currentPage - 1)">Anterior</a>
             </li>
-            <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index" [class.active]="currentPage === i + 1">
-              <a class="page-link" (click)="goToPage(i + 1)">{{ i + 1 }}</a>
+            <li
+              class="page-item"
+              *ngFor="let page of [].constructor(totalPages); let i = index"
+              [ngClass]="{'active-page': currentPage === i + 1}"
+            >
+              <a class="page-link" (click)="goToPage(i + 1)">
+                {{ i + 1 }}
+              </a>
             </li>
             <li class="page-item" [class.disabled]="currentPage === totalPages">
               <a class="page-link" (click)="goToPage(currentPage + 1)">Siguiente</a>
             </li>
           </ul>
         </nav>
-
-
-        <!-- Mostrar la página actual -->
-        <div class="text-center mt-3">
-          Página {{ currentPage }} de {{ totalPages }}
-        </div>
         <br>
+
       </div>
     </div>
   </div>
