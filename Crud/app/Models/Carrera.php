@@ -2,9 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Carrera extends Model
-{
-    //
+class Carrera extends Model{
+
+    use HasFactory;
+
+    protected $table = 'carrera';
+
+    protected $fillable =[
+        'idCarrera',
+        'nombre',
+        'institucion_idInstitucion'
+    ];
+
 }
