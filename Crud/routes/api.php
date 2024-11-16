@@ -3,8 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+//Controlador Usuario
 use App\Http\Controllers\usuarioController;
-
 
 Route::get('/Usuarios', [usuarioController::class, 'index']);
 
