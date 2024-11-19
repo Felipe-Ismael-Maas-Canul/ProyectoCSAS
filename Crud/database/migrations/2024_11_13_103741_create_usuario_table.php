@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('primer_apellido', 45);
             $table->string('segundo_apellido', 45);
             $table->string('correo', 45)->unique();
-            $table->string('conf_correo', 45);
             $table->string('contraseña', 45);
             $table->enum('tipo', ['Alumno', 'Administrador']);
             $table->unsignedBigInteger('Alumno_Matricula')->nullable();

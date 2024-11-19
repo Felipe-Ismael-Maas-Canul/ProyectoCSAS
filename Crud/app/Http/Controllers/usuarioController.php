@@ -32,7 +32,6 @@ class UsuarioController extends Controller
             'primer_apellido' => 'required',
             'segundo_apellido' => 'required',
             'correo' => 'required|email',
-            'conf_correo' => 'required|email',
             'contraseña' => 'required',
             //'tipo' => 'required',
             //'Alumno_Matricula' => 'required',

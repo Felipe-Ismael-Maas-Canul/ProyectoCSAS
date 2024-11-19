@@ -18,7 +18,6 @@ class Usuario extends Model{
         'primer_apellido',
         'segundo_apellido',
         'correo',
-        'conf_correo',
         'contraseña',
         //'tipo',
         //'Alumno_Matricula',
