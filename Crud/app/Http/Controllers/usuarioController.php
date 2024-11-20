@@ -6,12 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-
 use function Laravel\Prompts\error;
 
-class UsuarioController extends Controller
-{
-    public function index()
+class usuarioController extends Controller{
+    public function indexUsuario()
     {
         $usuarios = Usuario::all();
 
@@ -33,9 +31,9 @@ class UsuarioController extends Controller
             'segundo_apellido' => 'required',
             'correo' => 'required|email',
             'contraseña' => 'required',
-            //'tipo' => 'required',
-            //'Alumno_Matricula' => 'required',
-            //'Administrador_idAdministrador' => 'required',
+            'tipo' => 'required',
+            'Alumno_Matricula' => 'required',
+            'Administrador_idAdministrador' => 'required',
             'genero' => 'required',
             'edad' => 'required'
         ]);
@@ -55,11 +53,10 @@ class UsuarioController extends Controller
             'primer_apellido' => $request-> primer_apellido,
             'segundo_apellido' => $request -> segundo_apellido,
             'correo' => $request -> correo,
-            'conf_correo' => $request -> conf_correo,
             'contraseña' => $request -> contraseña,
-            //'tipo' => $request -> tipo,
-            //'Alumno_Matricula' => $request -> Alumno_Matricula,
-            //'Administrador_idAdministrador' => $request -> Administrador_idAdministrador,
+            'tipo' => $request -> tipo,
+            'Alumno_Matricula' => $request -> Alumno_Matricula,
+            'Administrador_idAdministrador' => $request -> Administrador_idAdministrador,
             'genero' => $request -> genero,
             'edad' => $request -> edad
         ]);
@@ -139,11 +136,10 @@ class UsuarioController extends Controller
             'primer_apellido' => 'required',
             'segundo_apellido' => 'required',
             'correo' => 'required|email',
-            'conf_correo' => 'required|email',
             'contraseña' => 'required',
-            //'tipo' => 'required',
-            //'Alumno_Matricula' => 'required',
-            //'Administrador_idAdministrador' => 'required',
+            'tipo' => 'required',
+            'Alumno_Matricula' => 'required',
+            'Administrador_idAdministrador' => 'required',
             'genero' => 'required',
             'edad' => 'required'
         ]);
@@ -162,11 +158,10 @@ class UsuarioController extends Controller
             $usuarios-> primer_apellido = $request-> primer_apellido;
             $usuarios-> segundo_apellido = $request -> segundo_apellido;
             $usuarios-> correo = $request -> correo;
-            $usuarios-> conf_correo = $request -> conf_correo;
             $usuarios-> contraseña = $request -> contraseña;
-            //$usuarios-> tipo = $request -> tipo;
-            //$usuarios-> Alumno_Matricula = $request -> Alumno_Matricula;
-            //$usuarios-> Administrador_idAdministrador = $request -> Administrador_idAdministrador;
+            $usuarios-> tipo = $request -> tipo;
+            $usuarios-> Alumno_Matricula = $request -> Alumno_Matricula;
+            $usuarios-> Administrador_idAdministrador = $request -> Administrador_idAdministrador;
             $usuarios-> genero = $request -> genero;
             $usuarios-> edad = $request -> edad;
 

@@ -11,11 +11,21 @@ class Opciones extends Model{
 
     protected $table = 'opciones';
 
+    protected $primaryKey= 'idOpciones';
+
     protected $fillable =[
         'idOpciones',
         'texto',
         'valor',
         'pregunta_idPregunta'
-
     ];
+
+    /**
+     * Relación con el modelo Pregunta.
+     * Una opción pertenece a una única pregunta.
+     */
+    public function pregunta()
+    {
+        return $this->belongsTo(Pregunta::class, 'pregunta_idPregunta', 'idPregunta');
+    }
 }

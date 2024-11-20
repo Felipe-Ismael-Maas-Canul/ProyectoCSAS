@@ -11,6 +11,8 @@ class Usuario extends Model{
 
     protected $table = 'usuario';
 
+    protected $primaryKey= 'idUsuario';
+    
     protected $fillable =[
         'idUsuario',
         'matricula',
@@ -19,11 +21,26 @@ class Usuario extends Model{
         'segundo_apellido',
         'correo',
         'contraseña',
-        //'tipo',
-        //'Alumno_Matricula',
-        //'Administrador_idAdministrador',
+        'tipo',
+        'Alumno_Matricula',
+        'Administrador_idAdministrador',
         'genero',
         'edad'
     ];
     
+ /**
+     * Relación con el modelo Alumno.
+     */
+    public function alumno()
+    {
+        return $this->belongsTo(Alumno::class, 'Alumno_Matricula', 'matricula');
+    }
+
+    /**
+     * Relación con el modelo Administrador.
+     */
+    public function administrador()
+    {
+        return $this->belongsTo(Administrador::class, 'Administrador_idAdministrador', 'idAdministrador');
+    }
 }

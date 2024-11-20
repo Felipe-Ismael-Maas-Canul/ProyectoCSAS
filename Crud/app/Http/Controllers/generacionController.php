@@ -3,18 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Carrera;
+use App\Models\Generacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use function Laravel\Prompts\error;
 
-class CarreraController extends Controller{
-    public function indexCarrera()
+class GeneracionController extends Controller
+{
+    public function indexGeneraciones()
     {
-        $carreras = Carrera::all();
+        $generaciones = Generacion::all();
 
         $data = [
-            'carreras' => $carreras,
+            'generaciones' => $generaciones,
             'status' => 200
         ];
 
@@ -24,9 +24,8 @@ class CarreraController extends Controller{
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'idCarrera' => 'required',
-            'nombre' => 'required',
-            'institucion_idInstitucion' => 'required'
+            'idGeneracion' => 'required',
+            'nombre' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -38,85 +37,84 @@ class CarreraController extends Controller{
             return response()->json($data, 400);
         }
 
-        $carrera = Carrera::create([
-            'idCarrera' => $request->idCarrera,
-            'nombre' => $request->nombre,
-            'institucion_idInstitucion' => $request->institucion_idInstitucion
+        $generacion = Generacion::create([
+            'idGeneracion' => $request->idGeneracion,
+            'nombre' => $request->nombre
         ]);
 
-        if (!$carrera) {
+        if (!$generacion) {
             $data = [
-                'message' => 'Error al crear la carrera',
+                'message' => 'Error al crear la generación',
                 'status' => 500
             ];
             return response()->json($data, 500);
         }
 
         $data = [
-            'message' => $carrera,
+            'message' => $generacion,
             'status' => 201
         ];
 
         return response()->json($data, 201);
     }
 
-    public function show($idCarrera)
+    public function show($idGeneracion)
     {
-        $carrera = Carrera::where('idCarrera', $idCarrera)->first();
+        $generacion = Generacion::where('idGeneracion', $idGeneracion)->first();
 
-        if (!$carrera) {
+        if (!$generacion) {
             $data = [
-                'message' => 'Carrera no encontrada',
+                'message' => 'Generación no encontrada',
                 'status' => 404
             ];
             return response()->json($data, 404);
         }
 
         $data = [
-            'carrera' => $carrera,
+            'generacion' => $generacion,
             'status' => 200
         ];
 
         return response()->json($data, 200);
     }
 
-    public function destroy($idCarrera)
+    public function destroy($idGeneracion)
     {
-        $carrera = Carrera::where('idCarrera', $idCarrera)->first();
+        $generacion = Generacion::where('idGeneracion', $idGeneracion)->first();
 
-        if (!$carrera) {
+        if (!$generacion) {
             $data = [
-                'message' => 'Carrera no encontrada',
+                'message' => 'Generación no encontrada',
                 'status' => 404
             ];
             return response()->json($data, 404);
         }
 
-        $carrera->delete();
+        $generacion->delete();
 
         $data = [
-            'message' => 'Carrera eliminada',
+            'message' => 'Generación eliminada',
             'status' => 200
         ];
 
         return response()->json($data, 200);
     }
 
-    public function update(Request $request, $idCarrera)
+    public function update(Request $request, $idGeneracion)
     {
-        $carrera = Carrera::where('idCarrera', $idCarrera)->first();
-        if (!$carrera) {
+        $generacion = Generacion::where('idGeneracion', $idGeneracion)->first();
+
+        if (!$generacion) {
             $data = [
-                'message' => 'Carrera no encontrada',
+                'message' => 'Generación no encontrada',
                 'status' => 404
             ];
             return response()->json($data, 404);
         }
 
         $validator = Validator::make($request->all(), [
-            'idCarrera' => 'required',
-            'nombre' => 'required',
-            'institucion_idInstitucion' => 'required'
+            'idGeneracion' => 'required',
+            'nombre' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -128,19 +126,17 @@ class CarreraController extends Controller{
             return response()->json($data, 400);
         }
 
-        $carrera->idCarrera = $request->idCarrera;
-        $carrera->nombre = $request->nombre;
-        $carrera->institucion_idInstitucion = $request->institucion_idInstitucion;
+        $generacion->idGeneracion = $request->idGeneracion;
+        $generacion->nombre = $request->nombre;
 
-        $carrera->save();
+        $generacion->save();
 
         $data = [
-            'message' => 'Carrera actualizada',
-            'carrera' => $carrera,
+            'message' => 'Generación actualizada',
+            'generacion' => $generacion,
             'status' => 200
         ];
 
         return response()->json($data, 200);
     }
 }
-
