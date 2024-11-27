@@ -1,0 +1,68 @@
+
+body {
+  font-family: 'Nunito Sans', sans-serif;
+}
+
+.gradient-form {
+  background: linear-gradient(to right, #53c1b4, #f8fcfc);
+}
+
+.gradient-custom-2 {
+  background: linear-gradient(to right, #53c1b4, #2C3E50);
+
+  h4 {
+    font-size: 2rem; // Tamaño del título
+    font-weight: bold; // Negrita para el título
+  }
+
+  p {
+    font-size: 1.2rem; // Tamaño del párrafo
+    line-height: 1.6; // Espaciado entre líneas
+  }
+
+  @media (max-width: 768px) {
+    h4 {
+      font-size: 1.5rem; // Tamaño ajustado para pantallas pequeñas
+    }
+
+    p {
+      font-size: 1rem; // Tamaño ajustado para pantallas pequeñas
+    }
+  }
+
+}
+
+.card {
+  border-radius: 1rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.form-label {
+  font-weight: bold;
+  font-family: 'Nunito Sans', sans-serif;; // Aplica la fuente personalizada
+}
+
+.btn {
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background-color: #53c1b4;
+  border: none;
+  color: white; // Color para el Texto
+}
+
+.btn-primary:hover {
+  background-color: #45b2a6; // Un color más oscuro en hover
+  color: white; // Cambia a blanco en hover
+}
+
+.btn-outline-danger {
+  border: 1px solid #dc3545;
+  color: #dc3545;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: #fff;
+}
