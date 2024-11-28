@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('usuario', function (Blueprint $table) {
-            $table->id('idUsuario')->primary();
+            $table->bigIncrements('idUsuario'); // Clave primaria y autoincrementable
             $table->integer('matricula')->unique();
             $table->string('nombres', 45);
             $table->string('primer_apellido', 45);
             $table->string('segundo_apellido', 45);
             $table->string('correo', 45)->unique();
-            $table->string('contraseña', 45);
+            $table->string('password', 255); // Cambiado a 'password' para consistencia con el modelo
             $table->enum('tipo', ['Alumno', 'Administrador']);
             $table->unsignedBigInteger('Alumno_Matricula')->nullable();
             $table->unsignedBigInteger('Administrador_idAdministrador')->nullable();
