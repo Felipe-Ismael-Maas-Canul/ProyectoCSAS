@@ -7,7 +7,7 @@ import { AdminComponent } from './pages/admin/admin.component';
 import { AdminRegisterComponent } from './pages/admin/admin-register/admin-register.component';
 import { StudentComponent } from './pages/student/student.component';
 import { StudentRegisterComponent } from './pages/student/student-register/student-register.component';
-
+import { DashAdmiComponent } from './pages/dash-admi/dash-admi.component'; // Importa el nuevo componente
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -24,6 +24,7 @@ export const routes: Routes = [
   { path: 'register-admin', component: AdminRegisterComponent },
 
   { path: 'student', component: StudentComponent },
-  { path: 'register-student', component: StudentRegisterComponent }
+  { path: 'register-student', component: StudentRegisterComponent },
 
+  { path: 'dash-admin', component: DashAdmiComponent } // Nueva ruta para DashAdmiComponent
 ];
