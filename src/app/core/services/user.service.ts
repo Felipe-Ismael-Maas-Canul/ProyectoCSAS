@@ -9,38 +9,39 @@ import { ResponseGet, ResponsePPD } from '../models/responses';
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = "http://localhost:8000/api/Usuarios";
+  // URL base de la API
+  private apiUrl = "http://localhost:8000/api";
 
   constructor(private http: HttpClient) { }
 
   // Registrar estudiante
   registerStudent(student: CreateStudent): Observable<ResponsePPD> {
-    return this.http.post<ResponsePPD>(`${this.apiUrl}/register-student`, student);
+    return this.http.post<ResponsePPD>(`${this.apiUrl}/Alumnos`, student);
   }
 
   // Registrar administrador
   registerAdmin(admin: CreateAdmin): Observable<ResponsePPD> {
-    return this.http.post<ResponsePPD>(`${this.apiUrl}/register-admin`, admin);
+    return this.http.post<ResponsePPD>(`${this.apiUrl}/Administrador`, admin);
   }
 
   // Obtener todos los administradores
   getAdmins(): Observable<ResponseGet<getAdmis[]>> {
-    return this.http.get<ResponseGet<getAdmis[]>>(`${this.apiUrl}/admins`);
+    return this.http.get<ResponseGet<getAdmis[]>>(`${this.apiUrl}/Administrador`);
   }
 
   // Obtener todos los estudiantes
   getStudents(): Observable<ResponseGet<getStudents[]>> {
-    return this.http.get<ResponseGet<getStudents[]>>(`${this.apiUrl}/students`);
+    return this.http.get<ResponseGet<getStudents[]>>(`${this.apiUrl}/Alumnos`);
   }
 
   // Actualizar administrador
   updateAdmin(id: number, admin: UpdateAdmi): Observable<ResponsePPD> {
-    return this.http.put<ResponsePPD>(`${this.apiUrl}/admins/${id}`, admin);
+    return this.http.put<ResponsePPD>(`${this.apiUrl}/Administrador/${id}`, admin);
   }
 
   // Obtener todos los usuarios (general)
   getAllUsers(): Observable<ResponseGet<CreateUserBase[]>> {
-    return this.http.get<ResponseGet<CreateUserBase[]>>(`${this.apiUrl}/users`);
+    return this.http.get<ResponseGet<CreateUserBase[]>>(`${this.apiUrl}/Usuarios`);
   }
 
 }

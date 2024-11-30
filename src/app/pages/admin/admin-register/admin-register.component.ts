@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CreateAdmin } from '../../../core/models/users';
+import { UserService } from '../../../core/services/user.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-admin-register',
@@ -22,9 +25,12 @@ export class AdminRegisterComponent {
     confirmPassword: '', // Campo para confirmar la contraseña
     tipo: 'Administrador',
     Administrador_idAdministrador: 0,
-    genero:'',
+    genero: '',
   };
 
+  isSubmitting = false;
+
+  constructor(private userService: UserService, private router: Router) {}
 
   // Función para validar si las contraseñas coinciden
   validatePasswordsMatch(): boolean {
@@ -34,13 +40,38 @@ export class AdminRegisterComponent {
   // Método que se ejecuta al enviar el formulario
   onSubmit(): void {
     if (!this.validatePasswordsMatch()) {
-      alert('Las contraseñas no coinciden. Por favor, verifícalas.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Las contraseñas no coinciden. Por favor, verifica e inténtalo nuevamente.',
+      });
       return;
     }
 
+    this.isSubmitting = true; // Desactivar el botón mientras se envían los datos
 
-    // Lógica para procesar el registro
-    console.log('Registro exitoso:', this.admin);
+    // Lógica para enviar datos al backend
+    this.userService.registerAdmin(this.admin).subscribe(
+      (response) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Registro Exitoso',
+          text: 'El administrador ha sido registrado correctamente.',
+        }).then(() => {
+          this.router.navigate(['/login']); // Redirige al login tras el registro
+        });
+        this.isSubmitting = false;
+      },
+      (error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un problema al registrar al administrador. Por favor, inténtalo de nuevo.',
+        });
+        console.error('Error al registrar:', error);
+        this.isSubmitting = false;
+      }
+    );
   }
 
 }

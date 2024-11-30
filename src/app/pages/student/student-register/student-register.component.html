@@ -73,6 +73,24 @@
                     </div>
                   </div>
 
+                  <!-- Segundo Apellido -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="segundo_apellido">Segundo Apellido</label>
+                    <input
+                      type="text"
+                      id="segundo_apellido"
+                      class="form-control"
+                      name="segundo_apellido"
+                      placeholder="Segundo Apellido"
+                      [(ngModel)]="student.segundo_apellido"
+                      required
+                      #segundoApellidoInput="ngModel"
+                    />
+                    <div *ngIf="segundoApellidoInput.invalid && segundoApellidoInput.touched" class="text-danger">
+                      El segundo apellido es obligatorio.
+                    </div>
+                  </div>
+
                   <!-- Correo Electrónico -->
                   <div class="form-outline mb-4">
                     <label class="form-label" for="correo">Correo Electrónico</label>
