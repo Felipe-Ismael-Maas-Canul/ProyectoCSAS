@@ -12,17 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('usuario', function (Blueprint $table) {
-            $table->bigIncrements('idUsuario'); // Clave primaria y autoincrementable
+            $table->bigIncrements('idUsuario'); // Definir el campo como autoincrementable
             $table->integer('matricula')->unique();
             $table->string('nombres', 45);
             $table->string('primer_apellido', 45);
             $table->string('segundo_apellido', 45);
             $table->string('correo', 45)->unique();
-            $table->string('password', 255); // Cambiado a 'password' para consistencia con el modelo
+            $table->string('password', 255);
             $table->enum('tipo', ['Alumno', 'Administrador']);
             $table->unsignedBigInteger('Alumno_Matricula')->nullable();
             $table->unsignedBigInteger('Administrador_idAdministrador')->nullable();
-            $table->string('genero', 45);
+            $table->enum('genero', ['Masculino', 'Femenino', 'Otro']); // Opciones para género
             $table->integer('edad');
             $table->timestamps();
         });

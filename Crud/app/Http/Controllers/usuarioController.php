@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use function Laravel\Prompts\error;
 
-class UsuarioController extends Controller
-{
+class usuarioController extends Controller{
     public function indexUsuario()
     {
         $usuarios = Usuario::all();
@@ -21,115 +21,158 @@ class UsuarioController extends Controller
         return response()->json($data, 200);
     }
 
-    public function store(Request $request)
+    public function store (Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'matricula' => 'required|integer|unique:usuario,matricula',
-            'nombres' => 'required|string|max:45',
-            'primer_apellido' => 'required|string|max:45',
-            'segundo_apellido' => 'nullable|string|max:45',
-            'correo' => 'required|email|unique:usuario,correo',
-            'password' => 'required|string|min:8', // Validación de contraseña más segura
-            'tipo' => 'required|in:Alumno,Administrador',
-            'Alumno_Matricula' => 'nullable|integer',
-            'Administrador_idAdministrador' => 'nullable|integer',
-            'genero' => 'nullable|string|max:45',
-            'edad' => 'required|integer|min:1'
+        $validator = validator::make($request->all(),[
+            'idUsuario' => 'required',
+            'matricula' => 'required',
+            'nombres' => 'required',
+            'primer_apellido' => 'required',
+            'segundo_apellido' => 'required',
+            'correo' => 'required|email',
+            'password' => 'required',
+            //'tipo' => 'required',
+            //'Alumno_Matricula' => 'required',
+            //'Administrador_idAdministrador' => 'required',
+            'genero' => 'required',
+            'edad' => 'required'
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Error en la validación de datos',
+        if ($validator -> fails()){
+            $data = [
+                'message' => 'Error en la validacion de datos',
                 'errors' => $validator->errors(),
-                'status' => 422
-            ], 422);
+                'status' => 200
+            ];
+            return response()->json($data, 400);
+        }
+        $usuarios = Usuario::create([
+            'idUsuario' => $request -> idUsuario,
+            'matricula' => $request -> matricula,
+            'nombres' => $request -> nombres,
+            'primer_apellido' => $request-> primer_apellido,
+            'segundo_apellido' => $request -> segundo_apellido,
+            'correo' => $request -> correo,
+            'password' => $request -> password,
+            'tipo' => $request -> tipo,
+            'Alumno_Matricula' => $request -> Alumno_Matricula,
+            'Administrador_idAdministrador' => $request -> Administrador_idAdministrador,
+            'genero' => $request -> genero,
+            'edad' => $request -> edad
+        ]);
+
+        if (!$usuarios){
+            $data = [
+                'message'=> 'error al crear al usuario',
+                'status' => 500
+            ];
+            return response()->json($data, 500);
         }
 
-        $usuarios = Usuario::create($request->all());
+        $data =[
+            'message' => $usuarios,
+            'status' => 2001
+        ];
 
-        return response()->json([
-            'message' => 'Usuario creado exitosamente',
-            'usuario' => $usuarios,
-            'status' => 201
-        ], 201);
+        return response()->json($data, 201);
     }
 
-    public function show($idUsuario)
-    {
-        $usuarios = Usuario::find($idUsuario);
+    public function show($idUsuario){
 
-        if (!$usuarios) {
-            return response()->json([
-                'message' => 'Usuario no encontrado',
-                'status' => 404
-            ], 404);
-        }
+    $usuarios = Usuario::where('idUsuario', $idUsuario)->first();
 
-        return response()->json([
-            'usuario' => $usuarios,
-            'status' => 200
-        ], 200);
+    if (!$usuarios) {
+        $data = [
+            'message' => 'Estudiante no encontrado',
+            'status' => 404
+        ];
+        return response()->json($data, 404);
+    }
+
+    $data = [
+        'usuario' => $usuarios,
+        'status' => 200
+    ];
+
+    return response()->json($data, 200);
     }
 
     public function destroy($idUsuario)
     {
-        $usuarios = Usuario::find($idUsuario);
-
+        $usuarios = Usuario::where('idUsuario', $idUsuario)->first();
+    
         if (!$usuarios) {
-            return response()->json([
-                'message' => 'Usuario no encontrado',
+            $data = [
+                'message' => 'Estudiante no encontrado',
                 'status' => 404
-            ], 404);
+            ];
+            return response()->json($data, 404);
         }
-
+    
         $usuarios->delete();
-
-        return response()->json([
-            'message' => 'Usuario eliminado exitosamente',
+    
+        $data = [
+            'message' => 'Estudiante eliminado',
             'status' => 200
-        ], 200);
+        ];
+    
+        return response()->json($data, 200);
     }
 
-    public function update(Request $request, $idUsuario)
-    {
-        $usuarios = Usuario::find($idUsuario);
-
+    public function update(Request $request, $idUsuario){
+        $usuarios = Usuario::where('idUsuario', $idUsuario)->first();
         if (!$usuarios) {
-            return response()->json([
-                'message' => 'Usuario no encontrado',
+            $data = [
+                'message' => 'Estudiante no encontrado',
                 'status' => 404
-            ], 404);
+            ];
+            return response()->json($data, 404);
         }
 
-        $validator = Validator::make($request->all(), [
-            'matricula' => 'required|integer|unique:usuario,matricula,' . $idUsuario . ',idUsuario',
-            'nombres' => 'required|string|max:45',
-            'primer_apellido' => 'required|string|max:45',
-            'segundo_apellido' => 'nullable|string|max:45',
-            'correo' => 'required|email|unique:usuario,correo,' . $idUsuario . ',idUsuario',
-            'password' => 'nullable|string|min:8', // Solo actualizar si se envía
-            'tipo' => 'required|in:Alumno,Administrador',
-            'Alumno_Matricula' => 'nullable|integer',
-            'Administrador_idAdministrador' => 'nullable|integer',
-            'genero' => 'nullable|string|max:45',
-            'edad' => 'required|integer|min:1'
+        $validator = validator::make($request->all(),[
+            'idUsuario' => 'required',
+            'matricula' => 'required',
+            'nombres' => 'required',
+            'primer_apellido' => 'required',
+            'segundo_apellido' => 'required',
+            'correo' => 'required|email',
+            'password' => 'required',
+            'tipo' => 'required',
+            'Alumno_Matricula' => 'required',
+            'Administrador_idAdministrador' => 'required',
+            'genero' => 'required',
+            'edad' => 'required'
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Error de validación',
+        if ($validator->fails()){
+            $data = [
+                'message' => 'Error de validacion',
                 'errors' => $validator->errors(),
-                'status' => 422
-            ], 422);
+                'status' => 400
+            ];
+            return response()->json($data, 400);
         }
+            $usuarios-> idUsuario = $request -> idUsuario;
+            $usuarios-> matricula = $request -> matricula;
+            $usuarios-> nombres =  $request -> nombres;
+            $usuarios-> primer_apellido = $request-> primer_apellido;
+            $usuarios-> segundo_apellido = $request -> segundo_apellido;
+            $usuarios-> correo = $request -> correo;
+            $usuarios-> password = $request -> password;
+            $usuarios-> tipo = $request -> tipo;
+            $usuarios-> Alumno_Matricula = $request -> Alumno_Matricula;
+            $usuarios-> Administrador_idAdministrador = $request -> Administrador_idAdministrador;
+            $usuarios-> genero = $request -> genero;
+            $usuarios-> edad = $request -> edad;
 
-        // Actualizar solo los campos necesarios
-        $usuarios->update($request->all());
+            $usuarios ->save();
 
-        return response()->json([
-            'message' => 'Usuario actualizado exitosamente',
-            'usuario' => $usuarios,
-            'status' => 200
-        ], 200);
+            $data = [
+                'message'=> 'Estudiante actualizado',
+                'usuarios' => $usuarios,
+                'status' => 200
+            ];
+
+            return response()->json($data,200);
     }
 }

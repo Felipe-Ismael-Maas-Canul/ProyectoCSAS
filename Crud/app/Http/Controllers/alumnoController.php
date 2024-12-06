@@ -6,166 +6,139 @@ use App\Http\Controllers\Controller;
 use App\Models\Alumno;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use function Laravel\Prompts\error;
 
-class alumnoController extends Controller{
+class AlumnoController extends Controller
+{
+    /**
+     * Obtener todos los alumnos.
+     */
     public function indexAlumno()
     {
-        $alumnos = Alumno::all();
+        $alumnos = Alumno::with('usuario')->get(); // Incluir datos del usuario relacionado
 
-        $data = [
+        return response()->json([
             'alumnos' => $alumnos,
-            'status' => 200
-        ];
-
-        return response()->json($data, 200);
+            'status' => 200,
+        ], 200);
     }
 
-    public function store (Request $request)
+    /**
+     * Registrar un nuevo alumno.
+     */
+    public function store(Request $request)
     {
-        $validator = validator::make($request->all(),[
-            'matricula'=>'required',
-            'nombres'=>'required',
-            'primer_apellido'=>'required',
-            'segundo_apellido'=>'required',
-            'Institucion_idInstitucion'=>'required',
-            'Carreras_idCarrera'=>'required',
-            'Generaciones_idGeneracion'=>'required',
-            'Grupo_idGrupo'=>'required',
-            'genero'=>'required',
-            'edad'=>'required'
+        $validator = Validator::make($request->all(), [
+            'usuario_id' => 'required|exists:usuario,idUsuario', // Relacionar con usuario
+            'nombres' => 'required|string|max:45',
+            'primer_apellido' => 'required|string|max:45',
+            'segundo_apellido' => 'nullable|string|max:45',
+            'Institucion_idInstitucion' => 'required|integer',
+            'Carreras_idCarrera' => 'required|integer',
+            'Generaciones_idGeneracion' => 'required|integer',
+            'Grupo_idGrupo' => 'required|integer',
+            'genero' => 'required|string|max:10',
+            'edad' => 'required|integer|min:1',
         ]);
 
-        if ($validator -> fails()){
-            $data = [
-                'message' => 'Error en la validacion de datos',
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Error en la validación de datos.',
                 'errors' => $validator->errors(),
-                'status' => 200
-            ];
-            return response()->json($data, 400);
-        }
-        $alumnos = Alumno::create([
-            'matricula'=> $request -> matricula,
-            'nombres'=> $request -> nombres,
-            'primer_apellido'=> $request -> primer_apellido,
-            'segundo_apellido'=> $request -> segundo_apellido,
-            'Institucion_idInstitucion'=> $request -> Institucion_idInstitucion,
-            'Carreras_idCarrera'=> $request -> Carreras_idCarrera,
-            'Generaciones_idGeneracion'=> $request -> Generaciones_idGeneracio,
-            'Grupo_idGrupo'=> $request -> Grupo_idGrupo,
-            'genero'=> $request -> genero,
-            'edad'=> $request -> edad
-        ]);
-
-        if (!$alumnos){
-            $data = [
-                'message'=> 'error al crear al alumno',
-                'status' => 500
-            ];
-            return response()->json($data, 500);
+                'status' => 422,
+            ], 422);
         }
 
-        $data =[
-            'message' => $alumnos,
-            'status' => 2001
-        ];
-        return response()->json($data, 201);
+        $alumno = Alumno::create($request->all());
+
+        return response()->json([
+            'message' => 'Alumno creado exitosamente.',
+            'alumno' => $alumno,
+            'status' => 201,
+        ], 201);
     }
-    public function show($matricula){
 
-        $alumnos = Alumno::where('matricula', $matricula)->first();
-    
-        if (!$alumnos) {
-            $data = [
-                'message' => 'Estudiante no encontrado',
-                'status' => 404
-            ];
-            return response()->json($data, 404);
-        }
-    
-        $data = [
-            'alumno' => $alumnos,
-            'status' => 200
-        ];
-    
-        return response()->json($data, 200);
+    /**
+     * Obtener un alumno por su matrícula.
+     */
+    public function show($matricula)
+    {
+        $alumno = Alumno::with('usuario')->where('matricula', $matricula)->first();
+
+        if (!$alumno) {
+            return response()->json([
+                'message' => 'Alumno no encontrado.',
+                'status' => 404,
+            ], 404);
         }
 
-        public function destroy($matricula)
-        {
-            $alumnos = Alumno::where('matricula', $matricula)->first();
-        
-            if (!$alumnos) {
-                $data = [
-                    'message' => 'Alumno no encontrado',
-                    'status' => 404
-                ];
-                return response()->json($data, 404);
-            }
-        
-            $alumnos->delete();
-        
-            $data = [
-                'message' => 'alumno eliminado',
-                'status' => 200
-            ];
-        
-            return response()->json($data, 200);
+        return response()->json([
+            'alumno' => $alumno,
+            'status' => 200,
+        ], 200);
+    }
 
+    /**
+     * Eliminar un alumno.
+     */
+    public function destroy($matricula)
+    {
+        $alumno = Alumno::where('matricula', $matricula)->first();
+
+        if (!$alumno) {
+            return response()->json([
+                'message' => 'Alumno no encontrado.',
+                'status' => 404,
+            ], 404);
         }
 
-    public function update(Request $request, $matricula){
-        $alumnos = Alumno::where('matricula', $matricula)->first();
-        if (!$alumnos) {
-            $data = [
-                'message' => 'alumno no encontrado',
-                'status' => 404
-            ];
-            return response()->json($data, 404);
+        $alumno->delete();
+
+        return response()->json([
+            'message' => 'Alumno eliminado exitosamente.',
+            'status' => 200,
+        ], 200);
+    }
+
+    /**
+     * Actualizar un alumno.
+     */
+    public function update(Request $request, $matricula)
+    {
+        $alumno = Alumno::where('matricula', $matricula)->first();
+
+        if (!$alumno) {
+            return response()->json([
+                'message' => 'Alumno no encontrado.',
+                'status' => 404,
+            ], 404);
         }
-        
-        $validator = validator::make($request->all(),[
-            'matricula'=>'required',
-            'nombres'=>'required',
-            'primer_apellido'=>'required',
-            'segundo_apellido'=>'required',
-            'Institucion_idInstitucion'=>'required',
-            'Carreras_idCarrera'=>'required',
-            'Generaciones_idGeneracion'=>'required',
-            'Grupo_idGrupo'=>'required',
-            'genero'=>'required',
-            'edad'=>'required'
+
+        $validator = Validator::make($request->all(), [
+            'nombres' => 'required|string|max:45',
+            'primer_apellido' => 'required|string|max:45',
+            'segundo_apellido' => 'nullable|string|max:45',
+            'Institucion_idInstitucion' => 'required|integer',
+            'Carreras_idCarrera' => 'required|integer',
+            'Generaciones_idGeneracion' => 'required|integer',
+            'Grupo_idGrupo' => 'required|integer',
+            'genero' => 'required|string|max:10',
+            'edad' => 'required|integer|min:1',
         ]);
-        
-        if ($validator->fails()){
-            $data = [
-                'message' => 'Error de validacion',
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Error en la validación de datos.',
                 'errors' => $validator->errors(),
-                'status' => 400
-            ];
-            return response()->json($data, 400);
+                'status' => 422,
+            ], 422);
         }
 
-        $alumnos-> matricula = $request -> matricula;
-        $alumnos-> nombres =  $request -> nombres;
-        $alumnos-> primer_apellido = $request-> primer_apellido;
-        $alumnos-> segundo_apellido = $request -> segundo_apellido;
-        $alumnos-> Institucion_idInstitucion = $request -> Institucion_idInstitucion;
-        $alumnos-> Carreras_idCarrera = $request -> Carreras_idCarrera;
-        $alumnos-> Generaciones_idGeneracion = $request -> Generaciones_idGeneracio;
-        $alumnos-> Grupo_idGrupo = $request -> Grupo_idGrupo;
-        $alumnos-> genero = $request -> genero;
-        $alumnos-> edad = $request -> edad;
-        
-        $alumnos ->save();
-        
-            $data = [
-                'message'=> 'Estudiante actualizado',
-                'usuarios' => $alumnos,
-                'status' => 200
-                ];
-        
-                return response()->json($data,200);
+        $alumno->update($request->all());
+
+        return response()->json([
+            'message' => 'Alumno actualizado exitosamente.',
+            'alumno' => $alumno,
+            'status' => 200,
+        ], 200);
     }
 }
-

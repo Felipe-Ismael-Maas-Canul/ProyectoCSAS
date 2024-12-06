@@ -5,15 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Alumno extends Model{
-
+class Alumno extends Model
+{
     use HasFactory;
 
+    // Nombre de la tabla asociada al modelo
     protected $table = 'alumno';
 
-    protected $primaryKey= 'matricula';
+    // Clave primaria de la tabla
+    protected $primaryKey = 'matricula';
 
-    protected $fillable =[
+    // Indicamos que la clave primaria no es autoincrementable
+    public $incrementing = false;
+
+    // Tipo de la clave primaria
+    protected $keyType = 'string';
+
+    // Campos que pueden ser llenados masivamente
+    protected $fillable = [
         'matricula',
         'nombres',
         'primer_apellido',
@@ -23,11 +32,12 @@ class Alumno extends Model{
         'Generaciones_idGeneracion',
         'Grupo_idGrupo',
         'genero',
-        'edad'
+        'edad',
     ];
 
     /**
-     * Relación con el modelo Institucion.
+     * Relación con el modelo Institución.
+     * Un alumno pertenece a una institución.
      */
     public function institucion()
     {
@@ -36,6 +46,7 @@ class Alumno extends Model{
 
     /**
      * Relación con el modelo Carrera.
+     * Un alumno pertenece a una carrera.
      */
     public function carrera()
     {
@@ -43,7 +54,8 @@ class Alumno extends Model{
     }
 
     /**
-     * Relación con el modelo Generacion.
+     * Relación con el modelo Generación.
+     * Un alumno pertenece a una generación.
      */
     public function generacion()
     {
@@ -52,6 +64,7 @@ class Alumno extends Model{
 
     /**
      * Relación con el modelo Grupo.
+     * Un alumno pertenece a un grupo.
      */
     public function grupo()
     {
@@ -60,9 +73,10 @@ class Alumno extends Model{
 
     /**
      * Relación con el modelo Usuario.
+     * Un alumno pertenece a un usuario.
      */
     public function usuario()
     {
-        return $this->hasOne(Usuario::class, 'Alumno_Matricula', 'matricula');
+        return $this->belongsTo(Usuario::class, 'matricula', 'Alumno_Matricula');
     }
 }

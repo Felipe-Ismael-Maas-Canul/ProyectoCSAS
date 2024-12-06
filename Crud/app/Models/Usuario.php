@@ -9,55 +9,56 @@ class Usuario extends Model
 {
     use HasFactory;
 
-    protected $table = 'usuario';
+    protected $table = 'usuario'; // Nombre de la tabla
+    protected $primaryKey = 'idUsuario'; // Clave primaria personalizada
 
-    protected $primaryKey = 'idUsuario';
-
+    /**
+     * Campos permitidos para asignación masiva.
+     */
     protected $fillable = [
-        'idUsuario',
         'matricula',
         'nombres',
         'primer_apellido',
         'segundo_apellido',
         'correo',
-        'password', // Se usará en el código, pero mapeará a "contraseña"
-        'tipo',
-        'Alumno_Matricula',
-        'Administrador_idAdministrador',
+        'password',
+        //'tipo',
+        //'Alumno_Matricula',
+        //'Administrador_idAdministrador',
         'genero',
-        'edad'
+        'edad',
     ];
 
     /**
+     * Ocultar campos sensibles en las respuestas JSON.
+     */
+    protected $hidden = ['password', 'created_at', 'updated_at'];
+
+    /**
+     * Mutador para encriptar la contraseña automáticamente.
+     */
+    public function setPasswordAttribute($value)
+    {
+        if (!empty($value) && !password_get_info($value)['algo']) {
+            $this->attributes['password'] = bcrypt($value);
+        }
+    }
+
+    /**
      * Relación con el modelo Alumno.
+     * Un usuario puede ser un alumno.
      */
     public function alumno()
     {
-        return $this->belongsTo(Alumno::class, 'Alumno_Matricula', 'matricula');
+        return $this->hasOne(Alumno::class, 'usuario_id', 'idUsuario');
     }
 
     /**
      * Relación con el modelo Administrador.
+     * Un usuario puede ser un administrador.
      */
     public function administrador()
     {
-        return $this->belongsTo(Administrador::class, 'Administrador_idAdministrador', 'idAdministrador');
-    }
-
-    /**
-     * Accessor para obtener el valor de la columna "contraseña" usando "password".
-     */
-    public function getPasswordAttribute()
-    {
-        return $this->attributes['contraseña'];
-    }
-
-    /**
-     * Mutator para establecer el valor en la columna "contraseña" usando "password".
-     */
-    public function setPasswordAttribute($value)
-    {
-        // Encriptar la contraseña antes de almacenarla
-        $this->attributes['contraseña'] = bcrypt($value);
+        return $this->hasOne(Administrador::class, 'usuario_id', 'idUsuario');
     }
 }
