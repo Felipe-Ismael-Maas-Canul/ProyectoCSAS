@@ -1,0 +1,92 @@
+.welcome-section {
+  margin: 20px;
+
+  .welcome-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f1faee;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    .welcome-text {
+      flex: 1; /* Asegura que el texto ocupe el espacio restante */
+      h1 {
+        color: #1d3557;
+        margin-bottom: 10px;
+      }
+      p {
+        color: #457b9d;
+      }
+    }
+
+    .welcome-image {
+      margin-left: -20px; /* Mueve la imagen más a la izquierda */
+      img {
+        width: 200px; /* Agranda la imagen */
+        height: auto;
+      }
+    }
+  }
+}
+
+.instructions {
+  margin: 20px; /* Igualamos el margen */
+  margin-left: 20px; /* Alinea la sección con las demás */
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.survey-section {
+  margin: 20px;
+
+  h3 {
+    color: #1d3557;
+    margin-bottom: 15px;
+  }
+
+  ul {
+    list-style: none; /* Elimina los puntos de la lista */
+    padding: 0;
+    margin: 0;
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      background: #f8f9fa;
+      margin: 10px 0;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      /* Corregir los tres puntitos */
+      .survey-item {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+
+        span {
+          white-space: nowrap; /* Evita saltos de línea */
+          overflow: hidden; /* Oculta el texto que desborde */
+          text-overflow: ellipsis; /* Evita los tres puntitos */
+        }
+
+        button {
+          background-color: #457b9d;
+          color: white;
+          border: none;
+          padding: 5px 10px;
+          border-radius: 5px;
+          cursor: pointer;
+
+          &:hover {
+            background-color: #1d3557;
+          }
+        }
+      }
+    }
+  }
+}

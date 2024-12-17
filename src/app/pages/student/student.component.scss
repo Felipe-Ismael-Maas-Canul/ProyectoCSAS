@@ -1,0 +1,139 @@
+.dashboard-wrapper {
+  display: grid;
+  grid-template-columns: 250px 1fr; /* Sidebar fijo y contenido dinámico */
+  height: 100vh; /* Altura completa de la pantalla */
+  font-family: 'Lato', sans-serif;
+  transition: grid-template-columns 0.3s ease; /* Suaviza el ajuste del grid */
+
+  .sidebar {
+    background-color: #1d3557;
+    color: white;
+    padding: 20px;
+    transition: width 0.3s ease, padding 0.3s ease;
+
+    .profile-section {
+      display: flex; /* Activa flexbox para manejar la alineación */
+      flex-direction: column; /* Asegura que los elementos estén en columna */
+      align-items: center; /* Centra horizontalmente los elementos */
+      justify-content: center; /* Centra verticalmente los elementos */
+      text-align: center; /* Asegura que el texto esté centrado */
+      margin-bottom: 20px; /* Espaciado inferior para separar del menú */
+
+      .profile-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin-bottom: 10px; /* Espaciado entre la imagen y el nombre */
+      }
+
+      .profile-name {
+        font-size: 1.2em;
+        margin: 5px 0; /* Espaciado entre el nombre y el correo */
+      }
+
+      .profile-email {
+        font-size: 0.9em;
+        color: #a8dadc;
+      }
+    }
+
+
+    /* Ajuste específico para los íconos */
+  .menu {
+    ul {
+      list-style: none; /* Elimina los puntos de la lista */
+      padding: 0;
+
+      li {
+        margin: 15px 0;
+
+        a {
+          display: flex; /* Asegura que los íconos y el texto estén alineados */
+          align-items: center; /* Centra verticalmente los elementos */
+          text-decoration: none; /* Elimina subrayados */
+          color: white; /* Color de texto */
+          padding: 10px 15px;
+          border-radius: 5px;
+          transition: background-color 0.3s ease, color 0.3s ease;
+
+          i {
+            margin-right: 10px; /* Espacio entre el ícono y el texto */
+            font-size: 1.2em; /* Ajusta el tamaño del ícono */
+          }
+
+          &:hover {
+            background-color: #457b9d; /* Color al pasar el ratón */
+          }
+        }
+
+        /* Estilo para la opción activa */
+        &.active a {
+          background-color: #f1faee;
+          color: #53c1b4;
+
+          i {
+            color: #53c1b4; /* Color del ícono en la opción activa */
+          }
+        }
+      }
+    }
+  }
+
+
+    /* Cuando la barra lateral está oculta */
+    &.hidden {
+      width: 0; /* La barra lateral ocupa 0 ancho */
+      padding: 0; /* Elimina el padding para evitar espacio vacío */
+      overflow: hidden; /* Oculta contenido sobrante */
+    }
+  }
+
+
+  .main-content {
+    background-color: #f8f9fa;
+    transition: all 0.3s ease; /* Suaviza la expansión del contenido */
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      background-color: white;
+
+      .hamburger {
+        font-size: 1.2em;
+        cursor: pointer;
+        background: none;
+        border: none;
+        color: #1d3557;
+      }
+
+      .home-link {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        font-size: 1em;
+        color: #1d3557;
+
+        i {
+          margin-right: 5px;
+        }
+
+        &:hover {
+          color: #53c1b4;
+        }
+      }
+    }
+
+
+    .dashboard-content {
+      padding: 20px;
+    }
+  }
+
+
+  /* Ajuste dinámico del grid */
+  &.sidebar-hidden {
+    grid-template-columns: 0 1fr; /* La barra lateral desaparece, y el contenido ocupa todo el espacio */
+  }
+}

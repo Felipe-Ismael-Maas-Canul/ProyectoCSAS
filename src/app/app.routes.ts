@@ -1,15 +1,20 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
+//Componentes para Admin
 import { AdminComponent } from './pages/admin/admin.component';
 import { DashAdminComponent } from './pages/admin/dash-admin/dash-admin.component';
 import { AdminRegisterComponent } from './pages/admin/admin-register/admin-register.component';
-import { StudentComponent } from './pages/student/student.component';
-import { DashStudentComponent } from './pages/student/dash-student/dash-student.component';
-import { StudentRegisterComponent } from './pages/student/student-register/student-register.component';
 import { CrearEncuestasComponent } from './pages/admin/crear-encuestas/crear-encuestas.component';
 import { ReportesComponent } from './pages/admin/reportes/reportes.component';
 import { UsuariosComponent } from './pages/admin/usuarios/usuarios.component';
+//Componentes para Student
+import { StudentComponent } from './pages/student/student.component';
+import { StudentRegisterComponent } from './pages/student/student-register/student-register.component';
+import { DashStudentComponent } from './pages/student/dash-student/dash-student.component';
+import { EncuestasComponent } from './pages/student/encuestas/encuestas.component';
+import { CompletadasComponent } from './pages/student/completadas/completadas.component';
+
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -36,12 +41,16 @@ export const routes: Routes = [
 
 
   // Rutas para Student
+  { path: '', redirectTo: '/student', pathMatch: 'full' },
+
   {
     path: 'student',
     component: StudentComponent,
     children: [
-      { path: '', redirectTo: 'dash-student', pathMatch: 'full' },
       { path: 'dash-student', component: DashStudentComponent },
+      { path: 'surveys', component: EncuestasComponent},
+      { path: 'completed', component: CompletadasComponent},
+      { path: '', redirectTo: 'dash-student', pathMatch: 'full' }
     ]
   }
 

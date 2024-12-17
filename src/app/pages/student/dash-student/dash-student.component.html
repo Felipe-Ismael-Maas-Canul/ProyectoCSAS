@@ -1,1 +1,38 @@
-<p>dash-student works!</p>
+<div class="dashboard-wrapper" [class.sidebar-hidden]="isSidebarHidden">
+
+  <!-- Main Content -->
+  <div class="main-content">
+
+    <!-- Sección de Bienvenida -->
+    <section class="welcome-section">
+      <div class="welcome-card">
+        <div class="welcome-text">
+          <h1>¡Hola, {{ studentName }}!</h1>
+          <p>Bienvenido al Cuestionario de Actitudes hacia el Servicio Comunitario</p>
+        </div>
+        <div class="welcome-image">
+          <img src="../../../../assets/Imagen/Completed-pana.png" alt="Bienvenida" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Instrucciones -->
+    <section class="instructions">
+      <h3>¿Cómo funcionan las encuestas?</h3>
+      <p>Las encuestas son de tipo Likert. Responde con sinceridad seleccionando la opción que mejor represente tu actitud.</p>
+    </section>
+
+    <!-- Sección de Encuestas -->
+    <section class="survey-section">
+      <h3>Encuestas Pendientes</h3>
+      <ul>
+        <li *ngFor="let survey of pendingSurveys">
+          <div class="survey-item">
+            <span>{{ survey.title }}</span>
+            <button (click)="startSurvey(survey.id)">Iniciar</button>
+          </div>
+        </li>
+      </ul>
+    </section>
+  </div>
+</div>
