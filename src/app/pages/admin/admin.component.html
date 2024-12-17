@@ -1,1 +1,47 @@
-<p>admin works!</p>
+<div class="dashboard-wrapper" [class.sidebar-hidden]="isSidebarHidden">
+  <!-- Sidebar -->
+  <aside class="sidebar" [class.hidden]="isSidebarHidden">
+    <div class="profile-section">
+      <img class="profile-avatar" [src]="userAvatar" alt="User Avatar" />
+      <h2 class="profile-name">{{ userName }}</h2>
+      <p class="profile-email">{{ userEmail }}</p>
+    </div>
+    <nav class="menu">
+      <ul>
+        <li routerLink="/admin/dash-admin" routerLinkActive="active">
+          <a><i class="fas fa-home"></i> Dashboard</a>
+        </li>
+        <li routerLink="/admin/usuarios" routerLinkActive="active">
+          <a><i class="fas fa-users"></i> Usuarios</a>
+        </li>
+        <li routerLink="/admin/crear-encuestas" routerLinkActive="active">
+          <a><i class="fas fa-edit"></i> Crear Encuestas</a>
+        </li>
+        <li routerLink="/admin/reportes" routerLinkActive="active">
+          <a><i class="fas fa-chart-line"></i> Reportes</a>
+        </li>
+        <li (click)="logout()">
+          <a><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <button class="hamburger" (click)="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+      </button>
+      <a routerLink="/admin/dash-admin" class="home-link">
+        <i class="fas fa-home"></i> Home
+      </a>
+    </header>
+
+    <!-- Contenido dinámico -->
+    <div class="dashboard-content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
