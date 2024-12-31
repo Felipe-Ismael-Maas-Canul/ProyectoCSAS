@@ -15,7 +15,7 @@ import Swal from 'sweetalert2';
   styleUrl: './admin-register.component.scss'
 })
 export class AdminRegisterComponent {
-  admin: CreateAdmin = {
+  /*admin: CreateAdmin = {
     idUsuario: 0,
     nombres: '',
     primer_apellido: '',
@@ -72,6 +72,6 @@ export class AdminRegisterComponent {
         this.isSubmitting = false;
       }
     );
-  }
+  }*/
 
 }
