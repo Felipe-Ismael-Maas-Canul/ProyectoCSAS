@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Foundation\Auth\User as Authenticatable; // Cambiar a Authenticatable
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
-class Usuario extends Model
+class Usuario extends Authenticatable // Extiende Authenticatable para usar autenticación
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
 
+    // Especifica el nombre de la tabla en la base de datos
     protected $table = 'usuario'; // Nombre de la tabla
+
+    // Define la clave primaria
     protected $primaryKey = 'idUsuario'; // Clave primaria personalizada
 
     /**
@@ -22,9 +26,9 @@ class Usuario extends Model
         'segundo_apellido',
         'correo',
         'password',
-        //'tipo',
-        //'Alumno_Matricula',
-        //'Administrador_idAdministrador',
+        'tipo',
+        'Alumno_Matricula',
+        'Administrador_idAdministrador',
         'genero',
         'edad',
     ];
@@ -32,17 +36,7 @@ class Usuario extends Model
     /**
      * Ocultar campos sensibles en las respuestas JSON.
      */
-    protected $hidden = ['password', 'created_at', 'updated_at'];
-
-    /**
-     * Mutador para encriptar la contraseña automáticamente.
-     */
-    public function setPasswordAttribute($value)
-    {
-        if (!empty($value) && !password_get_info($value)['algo']) {
-            $this->attributes['password'] = bcrypt($value);
-        }
-    }
+    protected $hidden = ['password', 'remember_token', 'created_at', 'updated_at'];
 
     /**
      * Relación con el modelo Alumno.
@@ -61,4 +55,26 @@ class Usuario extends Model
     {
         return $this->hasOne(Administrador::class, 'usuario_id', 'idUsuario');
     }
+
+    /**
+     * Mutador para encriptar la contraseña automáticamente.
+     */
+    public function setPasswordAttribute($value)
+    {
+        if (!empty($value) && !password_get_info($value)['algo']) {
+            $this->attributes['password'] = bcrypt($value);
+        }
+    }
+
+    /**
+     * Configura el campo de autenticación
+     */
+    public function getAuthIdentifierName()
+    {
+        return 'correo'; // Cambia esto si usas 'correo' en lugar de 'email'
+    }
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
 }

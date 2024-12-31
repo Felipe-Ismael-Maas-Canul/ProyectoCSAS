@@ -61,9 +61,14 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
+        'driver' => 'eloquent',
+        'model' => App\Models\Usuario::class, // Cambiar a tu modelo
         ],
+        //Esto es estructura por defecto
+        //'users' => [
+           // 'driver' => 'eloquent',
+           // 'model' => env('AUTH_MODEL', App\Models\User::class),
+        //],
 
         // 'users' => [
         //     'driver' => 'database',

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\authController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +16,12 @@ Route::post('/Usuarios', [usuarioController::class, 'store']);
 Route::put('/Usuarios/{idUsuario}', [usuarioController::class, 'update']);
 
 Route::delete('/Usuarios/{idUsuario}', [usuarioController::class, 'destroy']);
+
+
+// Rutas de autenticación
+Route::post('/login', [AuthController::class, 'login']);
+
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
 
 
 //Controlador Alumno
