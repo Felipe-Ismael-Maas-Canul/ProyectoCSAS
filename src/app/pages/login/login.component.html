@@ -14,12 +14,12 @@
                     style="width: 185px;"
                     alt="logo"
                   />
-                  <h4 class="mt-1 mb-5 pb-1">Iniciar Sesión</h4>
+                  <h4 class=" title mt-1 mb-5 pb-1">Iniciar Sesión</h4>
                 </div>
 
                 <!-- Formulario -->
                 <form (ngSubmit)="login()" #loginForm="ngForm">
-                  <p>Por favor, ingresa tu usuario</p>
+                  <p class="subtitle">Por favor, ingresa tu usuario</p>
 
                   <!-- Campo de correo -->
                   <div class="form-outline mb-4">
@@ -58,17 +58,14 @@
                   </div>
 
                   <!-- Botón de login -->
-                  <div class="text-center pt-1 mb-5 pb-1">
-                    <button
-                      class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"
-                      type="submit"
-                      [disabled]="loginForm.invalid"
-                    >
+                  <div class="d-flex align-items-center justify-content-center pb-4">
+                    <button class="btn btn-outline-info me-mb-4" type="submit"
+                      [disabled]="loginForm.invalid" >
                       Login
                     </button>
                   </div>
 
-                  <!-- Registro -->
+                  <!-- Registro De Cuenta Nueva -->
                   <div class="d-flex align-items-center justify-content-center pb-4">
                     <p class="mb-0 me-2">¿No tienes cuenta?</p>
                     <a routerLink="/register" class="btn btn-outline-danger">

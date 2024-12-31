@@ -20,8 +20,10 @@ export class AuthService {
    */
   login(credentials: { correo: string; password: string }): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
-      tap((user) => {
-        this.setCurrentUser(user); // Almacenar el usuario autenticado
+      tap((response) => {
+        if (response.success) {
+          this.setCurrentUser(response.user); // Guardar usuario autenticado
+        }
       }),
       catchError((error) => {
         console.error('Error en el inicio de sesión:', error);
@@ -29,6 +31,7 @@ export class AuthService {
       })
     );
   }
+
 
   /**
    * Establece el usuario autenticado en memoria.
@@ -53,13 +56,6 @@ export class AuthService {
     return this.currentUser;
   }
 
-  /**
-   * Método para cerrar sesión.
-   */
-  logout(): void {
-    this.currentUser = null;
-    localStorage.removeItem('currentUser'); // Eliminar del almacenamiento local
-  }
 
   /**
    * Verifica si el usuario es administrador.
@@ -85,6 +81,15 @@ export class AuthService {
    */
   isAuthenticated(): boolean {
     return !!this.getCurrentUser();
+  }
+
+
+  /**
+   * Método para cerrar sesión.
+   */
+  logout(): void {
+    this.currentUser = null;
+    localStorage.removeItem('currentUser'); // Eliminar del almacenamiento local
   }
 
 }

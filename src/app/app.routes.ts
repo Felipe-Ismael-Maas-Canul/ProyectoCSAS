@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
+import { RegisterComponent } from './pages/register/register.component';
 //Componentes para Admin
 import { AdminComponent } from './pages/admin/admin.component';
 import { DashAdminComponent } from './pages/admin/dash-admin/dash-admin.component';
@@ -16,10 +17,12 @@ import { EncuestasComponent } from './pages/student/encuestas/encuestas.componen
 import { CompletadasComponent } from './pages/student/completadas/completadas.component';
 
 
+
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
   { path: 'register-admin', component: AdminRegisterComponent },
   { path: 'register-student', component: StudentRegisterComponent },
 

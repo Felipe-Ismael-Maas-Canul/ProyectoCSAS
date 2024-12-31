@@ -1,3 +1,44 @@
+.welcome-section {
+  margin: 20px;
+
+  .welcome-card {
+    display: flex;
+    align-items: flex-start; /* Alinea la parte superior */
+    justify-content: space-between;
+    background-color: #f1faee;
+    border-radius: 10px;
+    padding: 40px; /* Incrementa el padding para más espacio */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    .welcome-text {
+      flex: 1; /* Ocupa el espacio disponible */
+      margin-right: 30px; /* Agrega espacio entre el texto y la imagen */
+      h1 {
+        font-size: 2.9em;
+        font-weight: bold;
+        color: #1d3557;
+        margin-bottom: 15px;
+      }
+      p {
+        font-size: 1.3em; /* Ajusta el tamaño del texto */
+        font-style: oblique;
+        font-weight: 500;
+        color: #457b9d;
+      }
+    }
+
+    .welcome-image {
+      flex-shrink: 0; /* Asegura que la imagen no cambie de tamaño */
+      img {
+        width: 200px; /* Incrementa el tamaño de la imagen */
+        height: auto;
+      }
+    }
+  }
+}
+
+
+
 .stats-section {
   padding: 20px;
 

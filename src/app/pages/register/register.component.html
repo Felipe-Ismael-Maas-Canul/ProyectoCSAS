@@ -1,0 +1,261 @@
+
+<section class="h-100 gradient-form" style="background-color: #eee;">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-xl-10">
+        <div class="card rounded-3 text-black">
+          <div class="row g-0">
+            <div class="col-lg-6">
+              <div class="card-body p-md-5 mx-md-4">
+                <div class="text-center">
+                  <img src="assets/Imagen/Logo_Csas.png" style="width: 185px;" alt="logo" />
+                  <h4 class="title mt-1 mb-5 pb-1">Registrar Usuario</h4>
+                </div>
+
+                <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+                  <p class="subtitle">Por favor, ingresa los datos solicitados </p>
+
+                  <!-- Tipo de Usuario -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="tipo">Tipo de Usuario</label>
+                    <select
+                      id="tipo"
+                      class="form-control"
+                      name="tipo"
+                      [(ngModel)]="user.tipo"
+                      required
+                      #tipoInput="ngModel"
+                      (change)="toggleFields()"
+                    >
+                      <option value="">Seleccione un tipo</option>
+                      <option value="Alumno">Alumno</option>
+                      <option value="Administrador">Administrador</option>
+                    </select>
+                    <div *ngIf="tipoInput.invalid && tipoInput.touched" class="text-danger">
+                      El tipo de usuario es obligatorio.
+                    </div>
+                  </div>
+
+                  <!-- Matrícula (Solo para Alumno) -->
+                  <div class="form-outline mb-4" *ngIf="isStudent">
+                    <label class="form-label" for="matricula">Matrícula</label>
+                    <input
+                      type="text"
+                      id="matricula"
+                      class="form-control"
+                      name="matricula"
+                      [(ngModel)]="user.matricula"
+                      (ngModelChange)="user.Alumno_Matricula = user.matricula"
+                      #matriculaInput="ngModel"
+                      placeholder="Matrícula"
+                      required
+                    />
+                    <div *ngIf="matriculaInput.invalid && matriculaInput.touched" class="text-danger">
+                      La matrícula es obligatoria.
+                    </div>
+                  </div>
+
+                  <!-- Alumno_Matricula (Solo para Alumno) -->
+                  <div class="form-outline mb-4" *ngIf="isStudent">
+                    <label class="form-label" for="Alumno_Matricula">Alumno Matricula</label>
+                    <input
+                      type="text"
+                      id="Alumno_Matricula"
+                      class="form-control"
+                      name="Alumno_Matricula"
+                      [(ngModel)]="user.Alumno_Matricula"
+                      readonly
+                    />
+                  </div>
+
+
+                  <!-- ID Administrador (Solo para Administrador) -->
+                  <div class="form-outline mb-4" *ngIf="!isStudent">
+                    <label class="form-label" for="Administrador_idAdministrador">ID Administrador</label>
+                    <input
+                      type="number"
+                      id="Administrador_idAdministrador"
+                      class="form-control"
+                      name="Administrador_idAdministrador"
+                      [(ngModel)]="user.Administrador_idAdministrador"
+                      #idAdministradorInput="ngModel"
+                      placeholder="ID Administrador"
+                      required
+                    />
+                    <div *ngIf="idAdministradorInput.invalid && idAdministradorInput.touched" class="text-danger">
+                      El ID de administrador es obligatorio.
+                    </div>
+                  </div>
+
+                  <!-- Nombres -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="nombres">Nombres</label>
+                    <input
+                      type="text"
+                      id="nombres"
+                      class="form-control"
+                      name="nombres"
+                      [(ngModel)]="user.nombres"
+                      #nombresInput="ngModel"
+                      placeholder="Nombres"
+                      required
+                    />
+                    <div *ngIf="nombresInput.invalid && nombresInput.touched" class="text-danger">
+                      El nombre es obligatorio.
+                    </div>
+                  </div>
+
+                  <!-- Primer Apellido -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="primer_apellido">Primer Apellido</label>
+                    <input
+                      type="text"
+                      id="primer_apellido"
+                      class="form-control"
+                      name="primer_apellido"
+                      [(ngModel)]="user.primer_apellido"
+                      #primer_apellidoInput="ngModel"
+                      placeholder="Primer Apellido"
+                      required
+                    />
+                    <div *ngIf="primer_apellidoInput.invalid && primer_apellidoInput.touched" class="text-danger">
+                      El primer apellido es obligatorio.
+                    </div>
+                  </div>
+
+                  <!-- Segundo Apellido -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="segundo_apellido">Segundo Apellido</label>
+                    <input
+                      type="text"
+                      id="segundo_apellido"
+                      class="form-control"
+                      name="segundo_apellido"
+                      [(ngModel)]="user.segundo_apellido"
+                      #segundo_apellidoInput="ngModel"
+                      placeholder="Segundo Apellido"
+                      required
+                    />
+                    <div *ngIf="segundo_apellidoInput.invalid && segundo_apellidoInput.touched" class="text-danger">
+                      El segundo apellido es obligatorio.
+                    </div>
+                  </div>
+
+                  <!-- Correo -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="correo">Correo Electrónico</label>
+                    <input
+                      type="email"
+                      id="correo"
+                      class="form-control"
+                      name="correo"
+                      [(ngModel)]="user.correo"
+                      #correoInput="ngModel"
+                      placeholder="Correo Electrónico"
+                      required
+                    />
+                    <div *ngIf="correoInput.invalid && correoInput.touched" class="text-danger">
+                      El correo electrónico es obligatorio.
+                    </div>
+                  </div>
+
+                  <!-- Contraseña -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="password">Contraseña</label>
+                    <input
+                      type="password"
+                      id="password"
+                      class="form-control"
+                      name="password"
+                      [(ngModel)]="user.password"
+                      #passwordInput="ngModel"
+                      placeholder="Contraseña"
+                      required
+                    />
+                    <div *ngIf="passwordInput.invalid && passwordInput.touched" class="text-danger">
+                      La contraseña es obligatoria.
+                    </div>
+                  </div>
+
+                  <!-- Confirmar Contraseña -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="confirmPassword">Confirmar Contraseña</label>
+                    <input
+                      type="password"
+                      id="confirmPassword"
+                      class="form-control"
+                      name="confirmPassword"
+                      [(ngModel)]="user.confirmPassword"
+                      placeholder="Confirmar Contraseña"
+                      required
+                    />
+                    <div *ngIf="registerForm.submitted && user.password !== user.confirmPassword" class="text-danger">
+                      Las contraseñas no coinciden.
+                    </div>
+                  </div>
+
+                  <!-- Género -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="genero">Género</label>
+                    <select
+                      id="genero"
+                      class="form-control"
+                      name="genero"
+                      [(ngModel)]="user.genero"
+                      required
+                      #generoInput="ngModel"
+                      (change)="toggleFields()"
+                    >
+                      <option value="">Seleccione un género</option>
+                      <option value="Femenino">Femenino</option>
+                      <option value="Masculino">Masculino</option>
+                      <option value="Otro">Otro</option>
+                    </select>
+                    <div *ngIf="generoInput.invalid && generoInput.touched" class="text-danger">
+                      El tipo de usuario es obligatorio.
+                    </div>
+                  </div>
+
+                  <!-- Edad -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="edad">Edad</label>
+                    <input
+                      type="number"
+                      id="edad"
+                      class="form-control"
+                      name="edad"
+                      [(ngModel)]="user.edad"
+                      #edadInput="ngModel"
+                      placeholder="Edad"
+                      required
+                    />
+                    <div *ngIf="edadInput.invalid && edadInput.touched" class="text-danger">
+                      La edad es obligatoria.
+                    </div>
+                  </div>
+
+                    <!-- Botón de Registro -->
+                    <div class="d-grid gap-2 col-4 mx-auto">
+                      <button class="btn btn-outline-info btn-lg mb-3" type="submit" >
+                      Registrar
+                    </button>
+                    </div>
+
+                </form>
+              </div>
+            </div>
+
+            <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
+              <div class="text-white px-3 py-4 p-md-5 mx-md-4">
+                <h4 class="mb-4">Bienvenido</h4>
+                <p class="small mb-0">
+                  Registra nuevos usuarios para gestionar el sistema de encuestas.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

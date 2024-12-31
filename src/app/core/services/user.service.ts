@@ -18,9 +18,10 @@ export class UserService {
    * Registrar un estudiante
    * @param student Datos del estudiante
    */
-  registerStudent(student: CreateStudent): Observable<ResponsePPD> {
-    return this.http.post<ResponsePPD>(`${this.apiUrl}/Usuarios`, student);
+  registerStudent(student: CreateStudent): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/Usuarios`, student);
   }
+
 
   /**
    * Registrar un administrador
@@ -63,4 +64,9 @@ export class UserService {
   getAllUsers(): Observable<ResponseGet<CreateUserBase[]>> {
     return this.http.get<ResponseGet<CreateUserBase[]>>(`${this.apiUrl}/Usuarios`);
   }
+
+  deleteUser(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/Usuarios/${id}`);
+  }
+
 }

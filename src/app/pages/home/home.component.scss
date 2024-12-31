@@ -34,35 +34,33 @@
     .text-content {
       text-align: center;
       margin-right: 90px; /* Espacio entre el texto y la imagen */
-      color: #091b1b;
+      color: #2c3e50;
 
       .title {
-        font-size: 3em;
+        font-size: 4em;
         font-weight: bold;
         margin: 0;
       }
 
       .subtitle {
-        font-size: 1.5em;
+        font-size: 1.9em;
         color: #cc71c6;
         margin: 10px 0;
         font-weight: 600; /* Semi-bold */
       }
 
-      .login-button {
-        margin-top: 20px;
-        padding: 10px 20px;
-        background-color: #53c1b4;
-        color: #091b1b;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 1em;
-        font-weight: 650; /* Semi-bold */
+      .btn-outline-info {
+        background-color: transparent; // Fondo transparente inicialmente
+        border: 2px solid #53c1b4; // Borde con color azul claro
+        color: #53c1b4; // Texto con color azul claro
+        transition: all 0.3s ease; // Suavizar la transición al hover o clic
+      }
 
-        &:hover {
-          background-color: #45a494;
-        }
+      .btn-outline-info:hover,
+      .btn-outline-info:focus {
+        background-color: #53c1b4; // Fondo azul claro al pasar el mouse o hacer clic
+        border-color: #53c1b4; // Borde cambia al azul claro
+        color: white; // Texto cambia a blanco
       }
     }
 

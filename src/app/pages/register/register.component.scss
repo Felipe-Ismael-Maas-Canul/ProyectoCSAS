@@ -1,4 +1,3 @@
-
 body {
   font-family: 'Nunito Sans', sans-serif;
 }
@@ -16,20 +15,21 @@ body {
   color: #cc71c6;
 }
 
+
 .gradient-form {
-  background: linear-gradient(to right, #53c1b4, #f8fcfc);
+  background: linear-gradient(to right, #2c3e50, #53c1b4);
 }
 
 .gradient-custom-2 {
-  background: linear-gradient(to right, #53c1b4, #2C3E50);
+  background: linear-gradient(to right, #53c1b4, #2c3e50);
 
   h4 {
-    font-size: 2rem; // Tamaño del título
+    font-size: 3rem; // Tamaño del título
     font-weight: bold; // Negrita para el título
   }
 
   p {
-    font-size: 1.2rem; // Tamaño del párrafo
+    font-size: 1.5rem; // Tamaño del párrafo
     line-height: 1.6; // Espaciado entre líneas
   }
 
@@ -52,20 +52,13 @@ body {
 
 .form-label {
   font-weight: bold;
-  font-family: 'Nunito Sans', sans-serif;; // Aplica la fuente personalizada
 }
 
 
-
-.btn {
-  transition: all 0.1s ease;
-}
-
-//Botón de login
 .btn-outline-info {
   background-color: transparent; // Fondo transparente inicialmente
-  border: 2px solid #53c1b4; // Borde con color azul oscuro
-  color: #53c1b4; // Texto con color azul oscuro
+  border: 2px solid #53c1b4; // Borde con color azul claro
+  color: #53c1b4; // Texto con color azul claro
   transition: all 0.3s ease; // Suavizar la transición al hover o clic
 }
 
@@ -73,20 +66,5 @@ body {
 .btn-outline-info:focus {
   background-color: #53c1b4; // Fondo azul claro al pasar el mouse o hacer clic
   border-color: #53c1b4; // Borde cambia al azul claro
-  color: white; // Texto cambia a blanco
-}
-
-//Registro De Cuenta Nueva
-.btn-outline-danger {
-  background-color: transparent; // Fondo transparente inicialmente
-  border: 2px solid #cc71c6; // Borde con color azul oscuro
-  color: #cc71c6; // Texto con color azul oscuro
-  transition: all 0.3s ease; // Suavizar la transición al hover o clic
-}
-
-.btn-outline-danger:hover,
-.btn-outline-danger:focus {
-  background-color: #cc71c6; // Fondo azul claro al pasar el mouse o hacer clic
-  border-color: #cc71c6; // Borde cambia al azul claro
   color: white; // Texto cambia a blanco
 }

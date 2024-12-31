@@ -1,12 +1,34 @@
-<section class="stats-section">
-  <div class="stats-cards">
-    <div class="card">
-      <h3>Usuarios</h3>
-      <p>10</p>
-    </div>
-    <div class="card">
-      <h3>Encuestas</h3>
-      <p>3</p>
-    </div>
-  </div>
-</section>
+<div class="dashboard-wrapper" [class.sidebar-hidden]="isSidebarHidden">
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Sección de Bienvenida -->
+    <section class="welcome-section">
+      <div class="welcome-card">
+        <div class="welcome-text">
+          <h1>¡Hola, {{ studentName }}!</h1>
+          <br>
+          <p>Bienvenido al Cuestionario de Actitudes hacia el Servicio Comunitario</p>
+        </div>
+        <div class="welcome-image">
+          <img src="../../../../assets/Imagen/Completed-pana.png" alt="Bienvenida" />
+        </div>
+      </div>
+    </section>
+
+    <section class="stats-section">
+      <div class="stats-cards">
+        <div class="card">
+          <h3>Usuarios</h3>
+          <p>10</p>
+        </div>
+        <div class="card">
+          <h3>Encuestas</h3>
+          <p>3</p>
+        </div>
+      </div>
+    </section>
+
+   </div>
+
+</div>

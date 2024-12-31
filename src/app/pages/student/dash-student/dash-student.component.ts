@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component,  OnInit  } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-dash-student',
@@ -11,9 +12,7 @@ import { Router } from '@angular/router';
 })
 export class DashStudentComponent implements OnInit {
   isSidebarHidden = false;
-  studentName = 'Juan Pérez'; // Simulado, debe venir del UserService
-  studentEmail = 'juanperez@example.com';
-  userAvatar = 'assets/avatars/male-avatar.png';
+  studentName = ''; // Inicializado vacío
 
   pendingSurveys = [
     { id: 1, title: 'Encuesta de Actitudes 1' },
@@ -21,10 +20,18 @@ export class DashStudentComponent implements OnInit {
     { id: 3, title: 'Encuesta de Actitudes 3' }
   ];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit() {
-    // Aquí podrías cargar los datos reales del estudiante desde un servicio
+    // Obtener los datos del usuario autenticado desde el AuthService
+    const user = this.authService.getCurrentUser();
+
+    if (user) {
+      this.studentName = user.nombres; // Solo muestra el nombre
+    } else {
+      // Si no hay usuario autenticado, redirige al login
+      this.router.navigate(['/login']);
+    }
   }
 
   toggleSidebar() {
@@ -34,12 +41,5 @@ export class DashStudentComponent implements OnInit {
   startSurvey(id: number) {
     console.log('Iniciando encuesta con ID:', id);
     this.router.navigate(['/student/surveys', id]);
-  }
-
-  logout() {
-    if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
-      console.log('Cerrando sesión...');
-      this.router.navigate(['/home']);
-    }
   }
 }

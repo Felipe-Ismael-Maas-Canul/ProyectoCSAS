@@ -1,6 +1,6 @@
 
 export interface CreateUserBase {
-  idUsuario: number; // Clave primaria
+  idUsuario: number; // Clave primaria y Hacerlo opcional
   nombres: string; // Nombres del usuario
   primer_apellido: string; // Primer apellido
   segundo_apellido: string; // Segundo apellido
@@ -9,22 +9,21 @@ export interface CreateUserBase {
   confirmPassword: string;
   tipo: string; // Tipo de usuario ('Alumno' o 'Administrador')
   genero: string; // Género (opcional)
+  edad: number;
 }
 
 
 //Extensiones Específicas para Estudiantes y Administradores
 export interface CreateStudent extends CreateUserBase {
-  edad: number;
   matricula:string;
   Alumno_Matricula: string; // Relación con el modelo Alumno
   Administrador_idAdministrador?: null; // Siempre nulo para estudiantes
 }
 
 export interface CreateAdmin extends CreateUserBase {
-  edad?:null;
-  matricula?:null;
-  Alumno_Matricula?: null; // Siempre nulo para administradores
-  Administrador_idAdministrador: number; // Relación con el modelo Administrador
+  matricula:null;
+  Alumno_Matricula: null; // Siempre nulo para administradores
+  Administrador_idAdministrador: string; // Relación con el modelo Administrador
 }
 
 
@@ -36,7 +35,7 @@ export interface getAdmis {
   segundo_apellido: string;
   correo: string;
   tipo: string; // Debe ser 'Administrador'
-  Administrador_idAdministrador: number;
+  Administrador_idAdministrador: string;
 }
 
 export interface getStudents {
@@ -56,6 +55,5 @@ export interface UpdateAdmi {
   primer_apellido?: string;
   segundo_apellido?: string;
   correo?: string;
-  Administrador_idAdministrador?: number;
+  Administrador_idAdministrador?: string;
 }
-
