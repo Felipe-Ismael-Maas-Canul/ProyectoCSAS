@@ -12,7 +12,8 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class DashAdminComponent implements OnInit {
   isSidebarHidden = false;
-  studentName = ''; // Inicializado vacío
+  adminName = ''; // Nombre del administrador
+  welcomePrefix = ''; // La palabra Bienvenido/a/e
 
   constructor(private router: Router, private authService: AuthService) {}
 
@@ -21,10 +22,24 @@ export class DashAdminComponent implements OnInit {
     const user = this.authService.getCurrentUser();
 
     if (user) {
-      this.studentName = user.nombres; // Solo muestra el nombre
+      console.log('Datos del usuario autenticado:', user); // Depuración
+      this.adminName = user.nombres;
+      this.setWelcomePrefix(user.genero); // Ajustar "Bienvenido/a/e" según el género
     } else {
       // Si no hay usuario autenticado, redirige al login
       this.router.navigate(['/login']);
+    }
+  }
+
+
+  setWelcomePrefix(genero: string): void {
+    // Asegúrate de que los valores del género coincidan con lo que envía tu backend
+    if (genero === 'male' || genero === 'Masculino') {
+      this.welcomePrefix = 'Bienvenido';
+    } else if (genero === 'female' || genero === 'Femenino') {
+      this.welcomePrefix = 'Bienvenida';
+    } else {
+      this.welcomePrefix = 'Bienvenide';
     }
   }
 

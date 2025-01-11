@@ -1,1 +1,49 @@
-<p>crear-encuestas works!</p>
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Crear Encuesta</h2>
+  <form>
+    <!-- Título de la Encuesta -->
+    <div class="mb-3">
+      <label for="titulo" class="form-label">Título de la Encuesta</label>
+      <input type="text" class="form-control" id="titulo" placeholder="Título de la encuesta">
+    </div>
+
+    <!-- Descripción -->
+    <div class="mb-3">
+      <label for="descripcion" class="form-label">Descripción (opcional)</label>
+      <textarea class="form-control" id="descripcion" rows="3" placeholder="Descripción breve de la encuesta"></textarea>
+    </div>
+
+    <!-- Opciones de Respuesta -->
+    <div class="mb-4">
+      <label class="form-label">Opciones de Respuesta</label>
+      <div class="input-group mb-2">
+        <input type="text" class="form-control" placeholder="Escribe una opción">
+        <button type="button" class="btn btn-success">Añadir Opción</button>
+      </div>
+      <ul class="list-group" id="lista-opciones">
+        <!-- Opciones se listarán aquí -->
+      </ul>
+    </div>
+
+    <!-- Sección de Categorías y Preguntas -->
+    <div id="categorias-seccion" class="mb-4">
+      <label class="form-label">Categorías</label>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <select class="form-select w-75" id="categoria-select">
+          <option value="">Seleccionar Categoría</option>
+          <!-- Categorías dinámicas aquí -->
+        </select>
+        <button type="button" class="btn btn-primary">Añadir Categoría</button>
+      </div>
+      <div id="preguntas-container">
+        <!-- Preguntas por categoría se agregarán aquí -->
+      </div>
+    </div>
+
+    <!-- Botones de Acción -->
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-success me-2">Guardar Encuesta</button>
+      <button type="reset" class="btn btn-secondary">Cancelar</button>
+    </div>
+  </form>
+</div>
