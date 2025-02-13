@@ -4,20 +4,15 @@
       <div class="col-xl-10">
         <div class="card rounded-3 text-black">
           <div class="row g-0">
-            <!-- Columna del formulario -->
             <div class="col-lg-6">
               <div class="card-body p-md-5 mx-md-4">
                 <div class="text-center">
-                  <img
-                    src="assets/Imagen/Logo_Csas.png"
-                    style="width: 185px;"
-                    alt="logo"
-                  />
-                  <h4 class="mt-1 mb-5 pb-1">Registrar Estudiante</h4>
+                  <img src="assets/Imagen/Logo_Csas.png" style="width: 185px;" alt="logo" />
+                  <h4 class="title mt-1 mb-5 pb-1">Registrar Estudiante</h4>
                 </div>
 
-                <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
-                  <p>Por favor, ingresa los datos del estudiante</p>
+                <form (ngSubmit)="registerStudent()" #studentForm="ngForm">
+                  <p class="subtitle">Por favor, ingresa los datos solicitados</p>
 
                   <!-- Matrícula -->
                   <div class="form-outline mb-4">
@@ -33,7 +28,7 @@
                       #matriculaInput="ngModel"
                     />
                     <div *ngIf="matriculaInput.invalid && matriculaInput.touched" class="text-danger">
-                      La matrícula es obligatoria.
+                      Este campo es obligatorio.
                     </div>
                   </div>
 
@@ -51,7 +46,7 @@
                       #nombresInput="ngModel"
                     />
                     <div *ngIf="nombresInput.invalid && nombresInput.touched" class="text-danger">
-                      El nombre es obligatorio.
+                      Este campo es obligatorio.
                     </div>
                   </div>
 
@@ -63,13 +58,13 @@
                       id="primer_apellido"
                       class="form-control"
                       name="primer_apellido"
-                      placeholder="Primer Apellido"
                       [(ngModel)]="student.primer_apellido"
+                      placeholder="Primer Apellido"
                       required
                       #primerApellidoInput="ngModel"
                     />
                     <div *ngIf="primerApellidoInput.invalid && primerApellidoInput.touched" class="text-danger">
-                      El primer apellido es obligatorio.
+                      Este campo es obligatorio.
                     </div>
                   </div>
 
@@ -81,17 +76,17 @@
                       id="segundo_apellido"
                       class="form-control"
                       name="segundo_apellido"
-                      placeholder="Segundo Apellido"
                       [(ngModel)]="student.segundo_apellido"
+                      #segundo_apellidoInput="ngModel"
+                      placeholder="Segundo Apellido"
                       required
-                      #segundoApellidoInput="ngModel"
                     />
-                    <div *ngIf="segundoApellidoInput.invalid && segundoApellidoInput.touched" class="text-danger">
+                    <div *ngIf="segundo_apellidoInput.invalid && segundo_apellidoInput.touched" class="text-danger">
                       El segundo apellido es obligatorio.
                     </div>
                   </div>
 
-                  <!-- Correo Electrónico -->
+                  <!-- Correo -->
                   <div class="form-outline mb-4">
                     <label class="form-label" for="correo">Correo Electrónico</label>
                     <input
@@ -99,13 +94,13 @@
                       id="correo"
                       class="form-control"
                       name="correo"
-                      placeholder="Correo"
+                      placeholder="Correo Electrónico"
                       [(ngModel)]="student.correo"
                       required
                       #correoInput="ngModel"
                     />
                     <div *ngIf="correoInput.invalid && correoInput.touched" class="text-danger">
-                      Ingresa un correo válido.
+                      Este campo es obligatorio.
                     </div>
                   </div>
 
@@ -117,10 +112,10 @@
                       id="password"
                       class="form-control"
                       name="password"
-                      placeholder="Contraseña"
                       [(ngModel)]="student.password"
-                      required
                       #passwordInput="ngModel"
+                      placeholder="Contraseña"
+                      required
                     />
                     <div *ngIf="passwordInput.invalid && passwordInput.touched" class="text-danger">
                       La contraseña es obligatoria.
@@ -135,42 +130,34 @@
                       id="confirmPassword"
                       class="form-control"
                       name="confirmPassword"
-                      placeholder="Confirmar Contraseña"
                       [(ngModel)]="student.confirmPassword"
+                      placeholder="Confirmar Contraseña"
                       required
-                      #confirmPasswordInput="ngModel"
                     />
-                    <div *ngIf="confirmPasswordInput.invalid && confirmPasswordInput.touched" class="text-danger">
-                      Confirma tu contraseña.
+                    <div *ngIf="studentForm.submitted && student.password !== student.confirmPassword" class="text-danger">
+                      Las contraseñas no coinciden.
                     </div>
-                  </div>
-
-                  <!-- Tipo de Usuario -->
-                  <div class="form-outline mb-4">
-                    <label class="form-label" for="tipo">Tipo de Usuario</label>
-                    <select
-                      id="tipo"
-                      class="form-control"
-                      name="tipo"
-                      [(ngModel)]="student.tipo"
-                      required
-                    >
-                      <option value="Estudiante" selected>Estudiante</option>
-                    </select>
                   </div>
 
                   <!-- Género -->
                   <div class="form-outline mb-4">
                     <label class="form-label" for="genero">Género</label>
-                    <input
-                      type="text"
+                    <select
                       id="genero"
                       class="form-control"
                       name="genero"
-                      placeholder="Género"
                       [(ngModel)]="student.genero"
                       required
-                    />
+                      #generoInput="ngModel"
+                    >
+                      <option value="">Seleccione un género</option>
+                      <option value="Femenino">Femenino</option>
+                      <option value="Masculino">Masculino</option>
+                      <option value="Otro">Otro</option>
+                    </select>
+                    <div *ngIf="generoInput.invalid && generoInput.touched" class="text-danger">
+                      Seleccionar un género es obligatorio.
+                    </div>
                   </div>
 
                   <!-- Edad -->
@@ -181,38 +168,116 @@
                       id="edad"
                       class="form-control"
                       name="edad"
-                      placeholder="Edad"
                       [(ngModel)]="student.edad"
+                      #edadInput="ngModel"
+                      placeholder="Edad"
                       required
                     />
+                    <div *ngIf="edadInput.invalid && edadInput.touched" class="text-danger">
+                      La edad es obligatoria.
+                    </div>
                   </div>
 
-                  <!-- Botón de registro -->
-                  <div class="text-center pt-1 mb-5 pb-1">
-                    <button
-                      class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"
-                      type="submit"
-                      [disabled]="registerForm.invalid"
+                  <!-- Institución -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="institucion">Instituto</label>
+                    <select
+                      id="institucion"
+                      class="form-control"
+                      name="Institucion_idInstitucion"
+                      [(ngModel)]="student.Institucion_idInstitucion"
+                      required
+                      #institutoInput="ngModel"
                     >
+                      <option value="">Seleccione un instituto</option>
+                      <!-- Opciones estáticas o cargadas en el componente -->
+                      <option value="1">Instituto Tecnológico Superior de Calkiní</option>
+                      <option value="2">Otro Instituto</option>
+                    </select>
+                    <div *ngIf="institutoInput.invalid && institutoInput.touched" class="text-danger">
+                      Seleccionar un instituto es obligatorio.
+                    </div>
+                  </div>
+
+                  <!-- Carrera -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="carrera">Carrera</label>
+                    <select
+                      id="carrera"
+                      class="form-control"
+                      name="Carreras_idCarrera"
+                      [(ngModel)]="student.Carreras_idCarrera"
+                      required
+                      #carreraInput="ngModel"
+                    >
+                      <option value="">Seleccione una carrera</option>
+                      <!-- Opciones estáticas o cargadas en el componente -->
+                      <option value="1">Ingeniería Bioquímica</option>
+                      <option value="2">Ingeniería en Industrias Alimentarias</option>
+                      <option value="3">Ingeniería en Materiales</option>
+                      <option value="4">Ingeniería en Sistemas Computacionales</option>
+                      <option value="5">Ingeniería Industrial</option>
+                      <option value="6">Ingeniería Mecatrónica</option>
+                      <option value="7">Licenciatura en Administración</option>
+                      <option value="8">Licenciatura en Informática</option>
+                    </select>
+                    <div *ngIf="carreraInput.invalid && carreraInput.touched" class="text-danger">
+                      Seleccionar una carrera es obligatorio.
+                    </div>
+                  </div>
+
+
+                  <!-- Semestre -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="semestre">Semestre</label>
+                    <input
+                      type="number"
+                      id="semestre"
+                      class="form-control"
+                      name="semestre"
+                      placeholder="Semestre"
+                      [(ngModel)]="student.semestre"
+                      required
+                      #semestreInput="ngModel"
+                    />
+                    <div *ngIf="semestreInput.invalid && semestreInput.touched" class="text-danger">
+                      Este campo es obligatorio.
+                    </div>
+                  </div>
+
+                  <!-- Grupo -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="grupo">Grupo</label>
+                    <input
+                      type="text"
+                      id="grupo"
+                      class="form-control"
+                      name="grupo"
+                      placeholder="Grupo"
+                      [(ngModel)]="student.grupo"
+                      required
+                      #grupoInput="ngModel"
+                    />
+                    <div *ngIf="grupoInput.invalid && grupoInput.touched" class="text-danger">
+                      El grupo es obligatorio.
+                    </div>
+                  </div>
+
+                  <!-- Botón de Registro -->
+                  <div class="d-grid gap-2 col-4 mx-auto">
+                    <button class="btn btn-outline-info btn-lg mb-3" type="submit" [disabled]="studentForm.invalid">
                       Registrar
                     </button>
-                  </div>
-
-                  <!-- Ir a iniciar sesión -->
-                  <div class="d-flex align-items-center justify-content-center pb-4">
-                    <p class="mb-0 me-2">¿Ya tienes cuenta?</p>
-                    <a routerLink="/login" class="btn btn-outline-danger">Login</a>
                   </div>
                 </form>
               </div>
             </div>
 
-            <!-- Columna de bienvenida -->
             <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
               <div class="text-white px-3 py-4 p-md-5 mx-md-4">
-                <h4 class="mb-4">Bienvenido</h4>
+                <h4 class="mb-4">Registro de Estudiantes</h4>
                 <p class="small mb-0">
-                  Registra nuevos estudiantes para gestionar el sistema de encuestas de manera eficiente.
+                  Por favor, completa todos los campos para registrar un nuevo estudiante.
                 </p>
               </div>
             </div>
@@ -222,4 +287,3 @@
     </div>
   </div>
 </section>
-

@@ -13,7 +13,7 @@ body {
 .subtitle{
   font-style: oblique;
   font-weight: 500;
-  color: #cc71c6;
+  color: gray;
 }
 
 .gradient-form {
@@ -77,16 +77,20 @@ body {
 }
 
 //Registro De Cuenta Nueva
-.btn-outline-danger {
+.btn-outline-primary {
   background-color: transparent; // Fondo transparente inicialmente
-  border: 2px solid #cc71c6; // Borde con color azul oscuro
-  color: #cc71c6; // Texto con color azul oscuro
+  border: 2px solid #53c1b4; // Borde con color azul oscuro
+  color: #53c1b4; // Texto con color azul oscuro
   transition: all 0.3s ease; // Suavizar la transición al hover o clic
 }
 
-.btn-outline-danger:hover,
-.btn-outline-danger:focus {
-  background-color: #cc71c6; // Fondo azul claro al pasar el mouse o hacer clic
-  border-color: #cc71c6; // Borde cambia al azul claro
+.btn-outline-secondary{
+  border: 2px solid;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+  background-color: #53c1b4; // Fondo azul claro al pasar el mouse o hacer clic
+  border-color: #53c1b4; // Borde cambia al azul claro
   color: white; // Texto cambia a blanco
 }

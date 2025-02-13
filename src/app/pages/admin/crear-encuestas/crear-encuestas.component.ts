@@ -1,65 +1,97 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-//import { SurveyService } from '../../../core/services/cuestionario.service';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, Validators, AbstractControl, ReactiveFormsModule } from '@angular/forms';
+import { CuestionarioService } from '../../../core/services/cuestionario.service';
+
 
 @Component({
   selector: 'app-crear-encuestas',
   standalone: true,
-    imports: [CommonModule ],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './crear-encuestas.component.html',
-  styleUrl: './crear-encuestas.component.scss'
+  styleUrls: ['./crear-encuestas.component.scss'],
 })
 export class CrearEncuestasComponent {
   encuestaForm: FormGroup;
-  opcionesRespuesta: string[] = [];
-  categorias: any[] = [];
 
   constructor(private fb: FormBuilder) {
     this.encuestaForm = this.fb.group({
       titulo: ['', Validators.required],
       descripcion: [''],
-      opciones: this.fb.array([]),
-      categorias: this.fb.array([]),
-    });
-  }
-
-  get opciones() {
-    return this.encuestaForm.get('opciones') as FormArray;
-  }
-
-  get categoriasArray() {
-    return this.encuestaForm.get('categorias') as FormArray;
-  }
-
-  // Añadir opción de respuesta
-  addOpcion(opcion: string) {
-    this.opciones.push(this.fb.control(opcion, Validators.required));
-  }
-
-  // Añadir categoría con preguntas
-  addCategoria(nombre: string) {
-    const categoria = this.fb.group({
-      nombre: [nombre, Validators.required],
       preguntas: this.fb.array([]),
     });
-    this.categoriasArray.push(categoria);
   }
 
-  // Añadir pregunta a una categoría
-  addPregunta(index: number, pregunta: string) {
-    const preguntas = this.categoriasArray.at(index).get('preguntas') as FormArray;
-    preguntas.push(this.fb.control(pregunta, Validators.required));
+  // Getter para el array de preguntas
+  get preguntasArray(): FormArray {
+    return this.encuestaForm.get('preguntas') as FormArray;
   }
 
-  // Guardar Encuesta
-  guardarEncuesta() {
-    if (this.encuestaForm.valid) {
-      console.log(this.encuestaForm.value);
-      // Aquí llamar al servicio para guardar en el backend
-    } else {
-      alert('Por favor llena todos los campos requeridos.');
+  // Función para castear AbstractControl a FormGroup
+  getPreguntaFormGroup(control: AbstractControl): FormGroup {
+    return control as FormGroup;
+  }
+
+  // Agregar pregunta
+  agregarPregunta(): void {
+    const nuevaPregunta = this.fb.group({
+      texto: ['', Validators.required],
+      tipo: ['respuesta-corta', Validators.required],
+      categoria: ['Sin Categoría'],
+      opciones: this.fb.array([]),
+    });
+    this.preguntasArray.push(nuevaPregunta);
+  }
+
+  // Eliminar pregunta
+  eliminarPregunta(index: number): void {
+    this.preguntasArray.removeAt(index);
+  }
+
+  // Manejo de tipo de pregunta
+  onTipoPreguntaChange(index: number): void {
+    const pregunta = this.preguntasArray.at(index) as FormGroup;
+    const tipo = pregunta.get('tipo')?.value;
+
+    // Limpiar opciones si existen
+    const opcionesArray = pregunta.get('opciones') as FormArray;
+    opcionesArray.clear();
+
+    // Si el tipo es "likert", agregar opciones por defecto
+    if (tipo === 'likert') {
+      opcionesArray.push(this.fb.control('Muy en Desacuerdo'));
+      opcionesArray.push(this.fb.control('Neutral'));
+      opcionesArray.push(this.fb.control('Muy de Acuerdo'));
     }
+  }
+
+  // Obtener opciones de una pregunta
+  getOpcionesArray(index: number): FormArray {
+    return this.preguntasArray.at(index).get('opciones') as FormArray;
+  }
+
+  // Agregar opción
+  agregarOpcion(index: number): void {
+    const opciones = this.getOpcionesArray(index);
+    if (opciones.length < 7) {
+      opciones.push(this.fb.control('', Validators.required));
+    }
+  }
+
+  // Eliminar opción
+  eliminarOpcion(preguntaIndex: number, opcionIndex: number): void {
+    const opciones = this.getOpcionesArray(preguntaIndex);
+    opciones.removeAt(opcionIndex);
+  }
+
+  // Guardar borrador
+  guardarBorrador(): void {
+    console.log('Borrador guardado', this.encuestaForm.value);
+  }
+
+  // Publicar encuesta
+  guardarEncuesta(): void {
+    console.log('Encuesta publicada', this.encuestaForm.value);
   }
 
 }

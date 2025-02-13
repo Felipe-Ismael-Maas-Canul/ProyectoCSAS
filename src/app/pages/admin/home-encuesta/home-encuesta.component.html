@@ -1,0 +1,52 @@
+<div class="container mt-5">
+  <!-- Título principal -->
+  <div class="text-center mb-4">
+    <h2 class="title-text">Gestión de Encuestas</h2>
+    <p class="subtitle-text">Crear y gestionar tus encuestas fácilmente</p>
+  </div>
+
+  <!-- Sección para crear un nuevo formulario -->
+  <div class="row mb-5 justify-content-center">
+    <div class="col-md-7">
+      <div class="card p-4 shadow-sm text-center">
+        <div class="icon-container mx-auto">
+          <i class="fas fa-plus-circle fa-3x text-icon"></i>
+        </div>
+        <h5 class="form-title">Crear un formulario</h5>
+        <p class="form-subtitle">Empieza creando una nueva encuesta para tus usuarios</p>
+        <button
+          class="btn btn-crear-encuesta mt-2"
+          (click)="navigateToCreateForm()">
+          Crear Encuesta
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección para listar formularios existentes -->
+  <div>
+    <h4 class="section-title">Formularios recientes</h4>
+    <div class="row">
+      <div class="col-md-4" *ngFor="let form of recentForms">
+        <div class="card p-3 shadow-sm">
+          <h6 class="form-name">{{ form.title }}</h6>
+          <p class="form-description">{{ form.description }}</p>
+          <div class="text-end">
+            <button
+              class="btn btn-sm btn-outline-custom me-2"
+              (click)="editForm(form.id)"
+            >
+              <i class="fas fa-edit"></i> Editar
+            </button>
+            <button
+              class="btn btn-sm btn-outline-danger"
+              (click)="deleteForm(form.id)"
+            >
+              <i class="fas fa-trash-alt"></i> Eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

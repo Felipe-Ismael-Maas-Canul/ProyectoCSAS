@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { ReactiveFormsModule} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -14,9 +14,10 @@ import Swal from 'sweetalert2';
   templateUrl: './student-register.component.html',
   styleUrl: './student-register.component.scss'
 })
-export class StudentRegisterComponent {
-  student: CreateStudent = {
-    idUsuario: 0,
+export class StudentRegisterComponent implements OnInit {
+  // Objeto para almacenar los datos del estudiante
+  student: any = {
+    tipo: "Alumno", // Especificar siempre el tipo de usuario
     matricula: '',
     nombres: '',
     primer_apellido: '',
@@ -24,77 +25,88 @@ export class StudentRegisterComponent {
     correo: '',
     password: '',
     confirmPassword: '',
-    tipo: 'Alumno',
-    Alumno_Matricula: '',
     genero: '',
-    edad: 0,
+    edad: null,
+    Carreras_idCarrera: null,
+    Institucion_idInstitucion: null,
+    grupo: '',
+    semestre: null,
   };
 
-  isSubmitting = false; // Estado para evitar múltiples envíos
+  instituciones: any[] = []; // Lista de institutos
+  carreras: any[] = []; // Lista de carreras
 
   constructor(private userService: UserService, private router: Router) {}
 
-  // Método para manejar el envío del formulario
-  onSubmit(): void {
-    if (!this.validatePasswordsMatch()) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Las contraseñas no coinciden. Por favor, verifica e inténtalo nuevamente.',
-      });
-      return;
-    }
+  ngOnInit(): void {
+    this.loadCarreras(); // Carga las carreras al iniciar
+    this.loadInstituciones(); // Carga los institutos al iniciar
+  }
 
-    // Convertir edad a número (si está como string)
-    this.student.edad = Number(this.student.edad);
-
-    if (isNaN(this.student.edad)) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'La edad debe ser un número válido.',
-      });
-      return;
-    }
-
-    this.isSubmitting = true;
-
-    this.userService.registerStudent(this.student).subscribe(
+  /**
+   * Cargar las instituciones desde la base de datos
+   */
+  loadInstituciones(): void {
+    this.userService.getInstituciones().subscribe(
       (response) => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Registro Exitoso',
-          text: 'El estudiante ha sido registrado correctamente.',
-        }).then(() => {
-          // Redirigir al login tras el registro (opcional)
-          this.router.navigate(['/login']);
-        });
-        this.isSubmitting = false;
+        this.instituciones = response;
       },
       (error) => {
-        // Manejo de errores desde el backend
-        if (error.status === 400) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'La matrícula ya está registrada. Por favor, utiliza una diferente.',
-          });
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Hubo un problema al registrar al estudiante. Por favor, inténtalo de nuevo.',
-          });
-        }
-        console.error('Error al registrar estudiante:', error);
-        this.isSubmitting = false;
+        console.error('Error al cargar las instituciones:', error);
       }
     );
   }
 
-  // Validar que las contraseñas coincidan
-  validatePasswordsMatch(): boolean {
-    return this.student.password === this.student.confirmPassword;
+  /**
+   * Cargar las carreras desde la base de datos
+   */
+  loadCarreras(): void {
+    this.userService.getCarreras().subscribe(
+      (response) => {
+        this.carreras = response;
+      },
+      (error) => {
+        console.error('Error al cargar las carreras:', error);
+      }
+    );
   }
 
+  // Registrar estudiante
+  registerStudent(): void {
+    // Validación de contraseñas
+    if (this.student.password !== this.student.confirmPassword) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error en el registro',
+        text: 'Las contraseñas no coinciden.',
+        confirmButtonColor: '#53c1b4', // Color del botón de confirmación
+      });
+      return;
+    }
+
+    // Enviar datos del estudiante al servicio
+    this.userService.registerStudent(this.student).subscribe(
+      (response) => {
+        // Mostrar mensaje de éxito
+        Swal.fire({
+          icon: 'success',
+          title: 'Registro exitoso',
+          text: `Bienvenido ${this.student.nombres} ha sido registrado correctamente.`,
+          confirmButtonColor: '#53c1b4',
+        }).then(() => {
+          this.router.navigate(['/login']); // Redirigir al login después del registro
+        });
+      },
+      (error) => {
+        // Manejar errores
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al registrar',
+          text: error.error?.message || 'Ocurrió un error al registrar al estudiante.',
+          confirmButtonColor: '#53c1b4',
+        });
+        console.error('Error al registrar al estudiante:', error);
+      }
+    );
+  }
 }

@@ -1,4 +1,3 @@
-
 <section class="h-100 gradient-form" style="background-color: #eee;">
   <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
@@ -14,7 +13,7 @@
                     style="width: 185px;"
                     alt="logo"
                   />
-                  <h4 class=" title mt-1 mb-5 pb-1">Iniciar Sesión</h4>
+                  <h4 class="title mt-1 mb-5 pb-1">Iniciar Sesión</h4>
                 </div>
 
                 <!-- Formulario -->
@@ -60,17 +59,18 @@
                   <!-- Botón de login -->
                   <div class="d-flex align-items-center justify-content-center pb-4">
                     <button class="btn btn-outline-info me-mb-4" type="submit"
-                      [disabled]="loginForm.invalid" >
+                      [disabled]="loginForm.invalid">
                       Login
                     </button>
                   </div>
 
-                  <!-- Registro De Cuenta Nueva -->
-                  <div class="d-flex align-items-center justify-content-center pb-4">
-                    <p class="mb-0 me-2">¿No tienes cuenta?</p>
-                    <a routerLink="/register" class="btn btn-outline-danger">
-                      Crear cuenta nueva
-                    </a>
+                  <!-- Botones para registro -->
+                  <div class="text-center mt-3">
+                    <p>¿No tienes cuenta? Regístrate:</p>
+                    <div class="d-flex justify-content-center gap-3 mt-2">
+                      <a class="btn btn-outline-primary" routerLink="/student/register">Estudiante</a>
+                      <a class="btn btn-outline-secondary" routerLink="/admin/register">Administrador</a>
+                    </div>
                   </div>
                 </form>
               </div>

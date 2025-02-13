@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { CreateAdmin } from '../../../core/models/users';
 import { UserService } from '../../../core/services/user.service';
 import Swal from 'sweetalert2';
@@ -12,66 +12,80 @@ import Swal from 'sweetalert2';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './admin-register.component.html',
-  styleUrl: './admin-register.component.scss'
+  styleUrl: './admin-register.component.scss',
 })
-export class AdminRegisterComponent {
-  /*admin: CreateAdmin = {
-    idUsuario: 0,
+export class AdminRegisterComponent implements OnInit {
+  // Objeto para almacenar los datos del administrador
+  admin: CreateAdmin = {
+    tipo: 'Administrador', // Siempre "Administrador"
+    id_admin:'',
     nombres: '',
     primer_apellido: '',
     segundo_apellido: '',
     correo: '',
-    password: '', // Contraseña principal
-    confirmPassword: '', // Campo para confirmar la contraseña
-    tipo: 'Administrador',
-    Administrador_idAdministrador: 0,
+    password: '',
+    confirmPassword: '',
     genero: '',
+    edad: 0,
+    Institucion_idInstitucion: 0,
   };
 
-  isSubmitting = false;
+  instituciones: any[] = []; // Lista de institutos disponibles
 
   constructor(private userService: UserService, private router: Router) {}
 
-  // Función para validar si las contraseñas coinciden
-  validatePasswordsMatch(): boolean {
-    return this.admin.password === this.admin.confirmPassword;
+  ngOnInit(): void {
+    this.loadInstituciones(); // Carga las instituciones al iniciar
   }
 
-  // Método que se ejecuta al enviar el formulario
-  onSubmit(): void {
-    if (!this.validatePasswordsMatch()) {
+  /**
+   * Cargar las instituciones desde la base de datos
+   */
+  loadInstituciones(): void {
+    this.userService.getInstituciones().subscribe(
+      (response) => {
+        this.instituciones = response.instituciones; // Accedemos al array de instituciones
+      },
+      (error) => {
+        console.error('Error al cargar las instituciones:', error);
+      }
+    );
+  }
+
+  /**
+   * Registrar administrador
+   */
+  registerAdmin(): void {
+    if (this.admin.password !== this.admin.confirmPassword) {
       Swal.fire({
         icon: 'error',
-        title: 'Error',
-        text: 'Las contraseñas no coinciden. Por favor, verifica e inténtalo nuevamente.',
+        title: 'Error en las contraseñas',
+        text: 'Las contraseñas no coinciden. Por favor, verifica.',
+        confirmButtonColor: '#53c1b4',
       });
       return;
     }
 
-    this.isSubmitting = true; // Desactivar el botón mientras se envían los datos
-
-    // Lógica para enviar datos al backend
     this.userService.registerAdmin(this.admin).subscribe(
       (response) => {
         Swal.fire({
           icon: 'success',
-          title: 'Registro Exitoso',
-          text: 'El administrador ha sido registrado correctamente.',
+          title: 'Registro exitoso',
+          text: `El administrador ${this.admin.nombres} ha sido registrado correctamente.`,
+          confirmButtonColor: '#53c1b4',
         }).then(() => {
-          this.router.navigate(['/login']); // Redirige al login tras el registro
+          this.router.navigate(['/login']); // Redirige al login tras registro exitoso
         });
-        this.isSubmitting = false;
       },
       (error) => {
         Swal.fire({
           icon: 'error',
-          title: 'Error',
-          text: 'Hubo un problema al registrar al administrador. Por favor, inténtalo de nuevo.',
+          title: 'Error al registrar',
+          text: 'Ocurrió un error al registrar al administrador. Por favor, intenta de nuevo.',
+          confirmButtonColor: '#53c1b4',
         });
-        console.error('Error al registrar:', error);
-        this.isSubmitting = false;
+        console.error('Error al registrar al administrador:', error);
       }
     );
-  }*/
-
+  }
 }

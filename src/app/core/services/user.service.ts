@@ -69,4 +69,18 @@ export class UserService {
     return this.http.delete(`${this.apiUrl}/Usuarios/${id}`);
   }
 
+    /**
+   * Obtener todos los institutos
+   */
+    getInstituciones(): Observable<any> {
+      return this.http.get<any>(`${this.apiUrl}/Instituciones`);
+    }
+
+    /**
+   * Obtener todas las carreras
+   */
+    getCarreras(): Observable<any> {
+      return this.http.get<any>(`${this.apiUrl}/Carrera`);
+    }
+
 }

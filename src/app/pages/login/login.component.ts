@@ -15,7 +15,7 @@ import Swal from 'sweetalert2';
     CommonModule,
     RouterModule,
     ReactiveFormsModule,
-    FormsModule],
+    FormsModule,],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })

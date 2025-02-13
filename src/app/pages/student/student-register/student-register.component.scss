@@ -27,6 +27,12 @@
 
 }
 
+.subtitle{
+  font-style: oblique;
+  font-weight: 500;
+  color: gray;
+}
+
 .card {
   border-radius: 1rem;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
@@ -36,18 +42,18 @@
   font-weight: bold;
 }
 
-.btn-primary {
-  background-color: #53c1b4;
-  border: none;
+
+//Boton de Registro
+.btn-outline-info {
+  background-color: transparent; // Fondo transparente inicialmente
+  border: 2px solid #53c1b4; // Borde con color azul oscuro
+  color: #53c1b4; // Texto con color azul oscuro
+  transition: all 0.3s ease; // Suavizar la transición al hover o clic
 }
 
-.btn-outline-danger {
-  border: 1px solid #dc3545;
-  color: #dc3545;
+.btn-outline-info:hover,
+.btn-outline-info:focus {
+  background-color: #53c1b4; // Fondo azul claro al pasar el mouse o hacer clic
+  border-color: #53c1b4; // Borde cambia al azul claro
+  color: white; // Texto cambia a blanco
 }
-
-.btn-outline-danger:hover {
-  background-color: #dc3545;
-  color: #fff;
-}
-

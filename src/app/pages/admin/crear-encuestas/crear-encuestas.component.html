@@ -1,49 +1,168 @@
 <div class="container mt-5">
-  <h2 class="text-center mb-4">Crear Encuesta</h2>
-  <form>
+  <h2 class="text-center">Crear Encuesta</h2>
+  <p class="text-center text-muted">Llena los siguientes campos para crear una nueva encuesta.</p>
+  <form [formGroup]="encuestaForm" (ngSubmit)="guardarEncuesta()">
     <!-- Título de la Encuesta -->
-    <div class="mb-3">
-      <label for="titulo" class="form-label">Título de la Encuesta</label>
-      <input type="text" class="form-control" id="titulo" placeholder="Título de la encuesta">
-    </div>
-
-    <!-- Descripción -->
-    <div class="mb-3">
-      <label for="descripcion" class="form-label">Descripción (opcional)</label>
-      <textarea class="form-control" id="descripcion" rows="3" placeholder="Descripción breve de la encuesta"></textarea>
-    </div>
-
-    <!-- Opciones de Respuesta -->
     <div class="mb-4">
-      <label class="form-label">Opciones de Respuesta</label>
-      <div class="input-group mb-2">
-        <input type="text" class="form-control" placeholder="Escribe una opción">
-        <button type="button" class="btn btn-success">Añadir Opción</button>
-      </div>
-      <ul class="list-group" id="lista-opciones">
-        <!-- Opciones se listarán aquí -->
-      </ul>
+      <label for="titulo" class="form-label">Título de la Encuesta</label>
+      <input
+        id="titulo"
+        type="text"
+        class="form-control"
+        formControlName="titulo"
+        placeholder="Ejemplo: Encuesta de Satisfacción"
+      />
+      <small class="text-muted">Escribe un título descriptivo para tu encuesta.</small>
     </div>
 
-    <!-- Sección de Categorías y Preguntas -->
-    <div id="categorias-seccion" class="mb-4">
-      <label class="form-label">Categorías</label>
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <select class="form-select w-75" id="categoria-select">
-          <option value="">Seleccionar Categoría</option>
-          <!-- Categorías dinámicas aquí -->
-        </select>
-        <button type="button" class="btn btn-primary">Añadir Categoría</button>
+    <!-- Descripción de la Encuesta -->
+    <div class="mb-4">
+      <label for="descripcion" class="form-label">Descripción de la Encuesta</label>
+      <textarea
+        id="descripcion"
+        class="form-control"
+        formControlName="descripcion"
+        placeholder="Breve descripción del objetivo de la encuesta..."
+        rows="3"
+      ></textarea>
+    </div>
+
+    <div class="row">
+      <!-- Fecha de Inicio -->
+      <div class="col-md-6">
+        <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
+        <input
+          type="date"
+          id="fechaInicio"
+          class="form-control"
+          formControlName="fecha_inicio"
+        />
       </div>
-      <div id="preguntas-container">
-        <!-- Preguntas por categoría se agregarán aquí -->
+
+      <!-- Fecha de Fin -->
+      <div class="col-md-6">
+        <label for="fechaFin" class="form-label">Fecha de Fin</label>
+        <input
+          type="date"
+          id="fechaFin"
+          class="form-control"
+          formControlName="fecha_fin"
+        />
       </div>
     </div>
 
-    <!-- Botones de Acción -->
-    <div class="d-flex justify-content-end">
-      <button type="submit" class="btn btn-success me-2">Guardar Encuesta</button>
-      <button type="reset" class="btn btn-secondary">Cancelar</button>
+    <!-- Carrera -->
+    <div class="mb-4 mt-4">
+      <label for="carrera" class="form-label">Carrera</label>
+      <input
+        id="carrera"
+        type="text"
+        class="form-control"
+        formControlName="carrera"
+        placeholder="Ejemplo: Ingeniería en Sistemas Computacionales"
+      />
+    </div>
+
+    <!-- Generación -->
+    <div class="mb-4">
+      <label for="generacion" class="form-label">Generación</label>
+      <input
+        id="generacion"
+        type="number"
+        class="form-control"
+        formControlName="generaciones_idGeneracion"
+        placeholder="ID de la generación"
+      />
+    </div>
+
+    <!-- Matrículas de alumnos -->
+    <div class="mb-4">
+      <label for="matriculas" class="form-label">Matrículas de Alumnos</label>
+      <textarea
+        id="matriculas"
+        class="form-control"
+        formControlName="matriculaAlumno"
+        placeholder="Ingresa las matrículas separadas por comas"
+        rows="3"
+      ></textarea>
+    </div>
+
+    <!-- Lista de Preguntas -->
+    <div
+      *ngFor="let pregunta of preguntasArray.controls; let i = index"
+      [formGroup]="getPreguntaFormGroup(pregunta)"
+      class="mb-4 border p-3 rounded bg-light shadow-sm"
+    >
+      <div class="row">
+        <!-- Texto de la Pregunta -->
+        <div class="col-md-6">
+          <label for="pregunta-{{ i }}" class="form-label">Texto de la Pregunta</label>
+          <input
+            id="pregunta-{{ i }}"
+            type="text"
+            class="form-control"
+            formControlName="texto"
+            placeholder="Escribe la pregunta"
+          />
+        </div>
+
+        <!-- Tipo de Pregunta -->
+        <div class="col-md-6">
+          <label class="form-label">Tipo de Pregunta</label>
+          <select formControlName="tipo" class="form-select" (change)="onTipoPreguntaChange(i)">
+            <option value="respuesta-corta">Respuesta Corta</option>
+            <option value="respuesta-larga">Respuesta Larga</option>
+            <option value="respuesta-si-no">Si / No</option>
+            <option value="multiple">Opción Múltiple</option>
+            <option value="likert">Escala Likert</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Categoría -->
+      <div class="mt-3">
+        <label class="form-label">Categoría</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="categoria"
+          placeholder="Categoría (opcional)"
+        />
+      </div>
+
+      <!-- Opciones para Opción Múltiple y Likert -->
+      <div
+        *ngIf="pregunta.get('tipo')?.value === 'multiple' || pregunta.get('tipo')?.value === 'likert'"
+        class="mt-3"
+      >
+        <label class="form-label">Opciones</label>
+        <div *ngFor="let opcion of getOpcionesArray(i).controls; let j = index" class="input-group mb-2">
+          <input
+            type="text"
+            class="form-control"
+            [formControlName]="j"
+            placeholder="Opción {{ j + 1 }}"
+          />
+          <button class="btn btn-danger" type="button" (click)="eliminarOpcion(i, j)">Eliminar</button>
+        </div>
+        <button class="btn btn-primary ms-2" type="button" (click)="agregarOpcion(i)">Añadir Opción</button>
+      </div>
+
+      <!-- Botón para eliminar preguntas -->
+      <div class="text-end mt-3">
+        <button class="btn btn-danger" type="button" (click)="eliminarPregunta(i)">Eliminar Pregunta</button>
+      </div>
+    </div>
+
+    <!-- Botón para agregar pregunta -->
+    <div class="text-center">
+      <button class="btn btn-success mt-4" type="button" (click)="agregarPregunta()">Agregar Pregunta</button>
+    </div>
+
+    <!-- Botones de Guardar y Publicar -->
+    <div class="mt-4 text-end">
+      <button class="btn btn-secondary" type="button" (click)="guardarBorrador()">Guardar como Borrador</button>
+      <button class="btn btn-primary ms-2" type="submit">Publicar Encuesta</button>
     </div>
   </form>
 </div>

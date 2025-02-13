@@ -1,0 +1,231 @@
+<section class="h-100 gradient-form" style="background-color: #eee;">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-xl-10">
+        <div class="card rounded-3 text-black">
+          <div class="row g-0">
+            <!-- Formulario -->
+            <div class="col-lg-6">
+              <div class="card-body p-md-5 mx-md-4">
+                <div class="text-center">
+                  <img
+                    src="assets/Imagen/Logo_Csas.png"
+                    style="width: 185px;"
+                    alt="logo"
+                  />
+                  <h4 class="title mt-1 mb-5 pb-1">Registrar Administrador</h4>
+                </div>
+
+                <form (ngSubmit)="registerAdmin()" #adminForm="ngForm">
+                  <p class="subtitle">Por favor, ingresa los datos solicitados</p>
+
+                  <!-- ID Administrador -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="id_admin">ID Administrador</label>
+                    <input
+                      type="text"
+                      id="id_admin"
+                      class="form-control"
+                      name="id_admin"
+                      placeholder="ID"
+                      [(ngModel)]="admin.id_admin"
+                      required
+                      #idAdminInput="ngModel"
+                    />
+                    <div *ngIf="idAdminInput.invalid && idAdminInput.touched" class="text-danger">
+                      Este campo es obligatorio.
+                    </div>
+                  </div>
+
+                  <!-- Nombres -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="nombres">Nombres</label>
+                    <input
+                      type="text"
+                      id="nombres"
+                      class="form-control"
+                      name="nombres"
+                      placeholder="Nombres"
+                      [(ngModel)]="admin.nombres"
+                      required
+                      #nombresInput="ngModel"
+                    />
+                    <div *ngIf="nombresInput.invalid && nombresInput.touched" class="text-danger">
+                      Este campo es obligatorio.
+                    </div>
+                  </div>
+
+                  <!-- Primer Apellido -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="primerApellido">Primer Apellido</label>
+                    <input
+                      type="text"
+                      id="primer_apellido"
+                      class="form-control"
+                      name="primer_apellido"
+                      placeholder="Primer Apellido"
+                      [(ngModel)]="admin.primer_apellido"
+                      required
+                      #primerApellidoInput="ngModel"
+                    />
+                    <div *ngIf="primerApellidoInput.invalid && primerApellidoInput.touched" class="text-danger">
+                      Este campo es obligatorio.
+                    </div>
+                  </div>
+
+                  <!-- Segundo Apellido -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="segundoApellido">Segundo Apellido</label>
+                    <input
+                      type="text"
+                      id="segundo_apellido"
+                      class="form-control"
+                      name="segundo_apellido"
+                      placeholder="Segundo Apellido"
+                      [(ngModel)]="admin.segundo_apellido"
+                      required
+                      #segundoApellidoInput="ngModel"
+                    />
+                    <div *ngIf="segundoApellidoInput.invalid && segundoApellidoInput.touched" class="text-danger">
+                      Este campo es obligatorio.
+                    </div>
+                  </div>
+
+                  <!-- Correo Electrónico -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="correo">Correo Electrónico</label>
+                    <input
+                      type="email"
+                      id="correo"
+                      class="form-control"
+                      name="correo"
+                      placeholder="Correo Electrónico"
+                      [(ngModel)]="admin.correo"
+                      required
+                      #correoInput="ngModel"
+                    />
+                    <div *ngIf="correoInput.invalid && correoInput.touched" class="text-danger">
+                      Este campo es obligatorio.
+                    </div>
+                  </div>
+
+                  <!-- Contraseña -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="password">Contraseña</label>
+                    <input
+                      type="password"
+                      id="password"
+                      class="form-control"
+                      name="password"
+                      [(ngModel)]="admin.password"
+                      placeholder="Contraseña"
+                      required
+                      #passwordInput="ngModel"
+                    />
+                    <div *ngIf="passwordInput.invalid && passwordInput.touched" class="text-danger">
+                      La contraseña es obligatoria.
+                    </div>
+                  </div>
+
+                  <!-- Confirmar Contraseña -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="confirmPassword">Confirmar Contraseña</label>
+                    <input
+                      type="password"
+                      id="confirmPassword"
+                      class="form-control"
+                      name="confirmPassword"
+                      [(ngModel)]="admin.confirmPassword"
+                      placeholder="Confirmar Contraseña"
+                      required
+                    />
+                    <div *ngIf="adminForm.submitted && admin.password !== admin.confirmPassword" class="text-danger">
+                      Las contraseñas no coinciden.
+                    </div>
+                  </div>
+
+                  <!-- Género -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="genero">Género</label>
+                    <select
+                      id="genero"
+                      class="form-control"
+                      name="genero"
+                      [(ngModel)]="admin.genero"
+                      required
+                      #generoInput="ngModel"
+                    >
+                      <option value="">Seleccione un género</option>
+                      <option value="Femenino">Femenino</option>
+                      <option value="Masculino">Masculino</option>
+                      <option value="Otro">Otro</option>
+                    </select>
+                    <div *ngIf="generoInput.invalid && generoInput.touched" class="text-danger">
+                      Este campo es obligatorio.
+                    </div>
+                  </div>
+
+                  <!-- Edad -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="edad">Edad</label>
+                    <input
+                      type="number"
+                      id="edad"
+                      class="form-control"
+                      name="edad"
+                      placeholder="Edad"
+                      [(ngModel)]="admin.edad"
+                      required
+                      #edadInput="ngModel"
+                    />
+                    <div *ngIf="edadInput.invalid && edadInput.touched" class="text-danger">
+                      La edad es obligatoria.
+                    </div>
+                  </div>
+
+                  <!-- Institución -->
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="Institucion_idInstitucion">Instituto</label>
+                    <select
+                      id="Institucion_idInstitucion"
+                      class="form-control"
+                      [(ngModel)]="admin.Institucion_idInstitucion"
+                      name="Institucion_idInstitucion"
+                      required
+                      #institutoInput="ngModel"
+                    >
+                      <option value="">Seleccione un instituto</option>
+                      <option *ngFor="let institucion of instituciones" [value]="institucion.idInstitucion">
+                        {{ institucion.nombre }}
+                      </option>
+                    </select>
+                    <div *ngIf="institutoInput.invalid && institutoInput.touched" class="text-danger">
+                      Seleccionar un instituto es obligatorio.
+                    </div>
+                  </div>
+
+                  <!-- Botón de Registro -->
+                  <div class="d-grid gap-2 col-4 mx-auto">
+                    <button class="btn btn-outline-info btn-lg mb-3" type="submit" [disabled]="adminForm.invalid">
+                      Registrar
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- Columna de bienvenida -->
+            <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
+              <div class="text-white px-3 py-4 p-md-5 mx-md-4">
+                <h4 class="mb-4">Registro de Administradores</h4>
+                <p class="small mb-0">
+                  Por favor, completa todos los campos para registrar un nuevo administrador.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

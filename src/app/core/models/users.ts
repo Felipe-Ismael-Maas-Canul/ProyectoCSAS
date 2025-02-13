@@ -1,32 +1,37 @@
-
+//Modelo para Usuario
 export interface CreateUserBase {
-  idUsuario: number; // Clave primaria y Hacerlo opcional
+  idUsuario?: number; // Clave primaria (opcional al crear)
+  tipo: string; // Tipo de usuario ('Alumno' o 'Administrador')
   nombres: string; // Nombres del usuario
   primer_apellido: string; // Primer apellido
   segundo_apellido: string; // Segundo apellido
   correo: string; // Correo electrónico
   password: string; // Contraseña
-  confirmPassword: string;
-  tipo: string; // Tipo de usuario ('Alumno' o 'Administrador')
-  genero: string; // Género (opcional)
-  edad: number;
+  confirmPassword: string; // Confirmación de contraseña
+  genero: string; // Género
+  edad: number; // Edad del usuario
 }
 
-
-//Extensiones Específicas para Estudiantes y Administradores
+//Modelo para Usuario de tipo Alumno
 export interface CreateStudent extends CreateUserBase {
-  matricula:string;
-  Alumno_Matricula: string; // Relación con el modelo Alumno
+  tipo: "Alumno"; // Siempre "Alumno"
+  matricula: string; // Matrícula del estudiante
   Administrador_idAdministrador?: null; // Siempre nulo para estudiantes
+  Carreras_idCarrera: number; // Carrera asociada
+  grupo: string; // Grupo del estudiante
+  semestre: number; // Semestre del estudiante
+  Institucion_idInstitucion: number; // Institución a la que pertenece
 }
 
+//Modelo para Usuario de tipo Admin
 export interface CreateAdmin extends CreateUserBase {
-  matricula:null;
-  Alumno_Matricula: null; // Siempre nulo para administradores
-  Administrador_idAdministrador: string; // Relación con el modelo Administrador
+  tipo: "Administrador"; // Siempre "Administrador"
+  matricula?: null; // Sin matrícula para administradores
+  id_admin: string; // Relación con el modelo Administrador
+  Institucion_idInstitucion: number; // Institución a la que pertenece
 }
 
-
+////////////////////////////////////////////////////////////////////////////////////
 
 export interface getAdmis {
   idUsuario: number;
@@ -34,7 +39,7 @@ export interface getAdmis {
   primer_apellido: string;
   segundo_apellido: string;
   correo: string;
-  tipo: string; // Debe ser 'Administrador'
+  tipo: "Administrador"; // Siempre "Administrador"
   Administrador_idAdministrador: string;
 }
 
@@ -45,8 +50,11 @@ export interface getStudents {
   primer_apellido: string;
   segundo_apellido: string;
   correo: string;
-  tipo: string; // Debe ser 'Alumno'
-  Alumno_Matricula: string;
+  tipo: "Alumno"; // Siempre "Alumno"
+  Carreras_idCarrera: number; // Carrera asociada
+  grupo: string; // Grupo del estudiante
+  semestre: number; // Semestre del estudiante
+  Institucion_idInstitucion: number; // Institución a la que pertenece
 }
 
 export interface UpdateAdmi {
@@ -56,4 +64,5 @@ export interface UpdateAdmi {
   segundo_apellido?: string;
   correo?: string;
   Administrador_idAdministrador?: string;
+  Institucion_idInstitucion?: number;
 }

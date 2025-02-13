@@ -1,0 +1,97 @@
+// Colores personalizados
+$title-color: #2C3E50;
+$button-color: #53c1b4;
+
+.icon-container {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: lighten($button-color, 40%);
+  border-radius: 50%;
+}
+
+.text-icon {
+  color: $button-color;
+}
+
+.card {
+  border-radius: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+// Estilos para los textos
+.title-text {
+  color: $title-color;
+  font-weight: 700;
+}
+
+.subtitle-text {
+  color: lighten($title-color, 20%);
+  font-weight: 400;
+}
+
+.section-title {
+  color: darken($title-color, 10%);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.form-title {
+  color: $title-color;
+  font-weight: 500;
+}
+
+.form-subtitle {
+  color: lighten($title-color, 30%);
+  font-size: 0.9rem;
+}
+
+.form-name {
+  color: $title-color;
+  font-weight: 600;
+}
+
+.form-description {
+  color: lighten($title-color, 30%);
+  font-size: 0.85rem;
+}
+
+// Botón personalizado
+.btn-crear-encuesta {
+  background-color: #53c1b4; /* Color base */
+  color: #fff; /* Color del texto */
+  border: none; /* Sin borde */
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+
+  &:hover {
+    background-color: #45a69c; /* Color al pasar el mouse */
+    transform: scale(1.03); /* Pequeño aumento al hover */
+  }
+
+  &:active {
+    background-color: #3a8e85; /* Color al hacer clic */
+    transform: scale(0.97); /* Disminución al hacer clic */
+  }
+}
+
+
+.btn-outline-danger {
+  border-color: #dc3545;
+  color: #dc3545;
+
+  &:hover {
+    background-color: #dc3545;
+    color: #fff;
+  }
+}
