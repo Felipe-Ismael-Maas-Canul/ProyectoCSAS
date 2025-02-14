@@ -2,42 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Alumno;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class AlumnoController extends Controller
 {
-    /**
-     * Obtener todos los alumnos.
-     */
+    // Obtener todos los alumnos con su usuario relacionado
     public function indexAlumno()
     {
-        $alumnos = Alumno::with('usuario')->get(); // Incluir datos del usuario relacionado
+        $alumnos = Alumno::with('usuario')->get();
 
         return response()->json([
             'alumnos' => $alumnos,
             'status' => 200,
-        ], 200);
+        ]);
     }
 
-    /**
-     * Registrar un nuevo alumno.
-     */
+    // Registrar un nuevo alumno
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'usuario_id' => 'required|exists:usuario,idUsuario', // Relacionar con usuario
+            'matricula' => 'required|string|max:10|unique:alumno,matricula',
             'nombres' => 'required|string|max:45',
             'primer_apellido' => 'required|string|max:45',
             'segundo_apellido' => 'nullable|string|max:45',
-            'Institucion_idInstitucion' => 'required|integer',
-            'Carreras_idCarrera' => 'required|integer',
-            'Generaciones_idGeneracion' => 'required|integer',
-            'Grupo_idGrupo' => 'required|integer',
+            'correo' => 'required|email|unique:usuario,correo',
+            'password' => 'required|string|min:6',
+            'Institucion_idInstitucion' => 'required|exists:institucion,idInstitucion',
+            'Carreras_idCarrera' => 'required|exists:carrera,idCarrera',
+            'semestre' => 'required|integer|min:1|max:8',
+            'grupo' => 'required|string|max:5',
             'genero' => 'required|string|max:10',
-            'edad' => 'required|integer|min:1',
+            'edad' => 'required|integer|min:1|max:100',
         ]);
 
         if ($validator->fails()) {
@@ -45,84 +44,58 @@ class AlumnoController extends Controller
                 'message' => 'Error en la validación de datos.',
                 'errors' => $validator->errors(),
                 'status' => 422,
-            ], 422);
+            ]);
         }
 
-        $alumno = Alumno::create($request->all());
+        // Crear usuario
+        $usuario = Usuario::create([
+            'idUsuario' => $request->matricula, // Usa la matrícula como ID
+            'nombres' => $request->nombres,
+            'primer_apellido' => $request->primer_apellido,
+            'segundo_apellido' => $request->segundo_apellido,
+            'correo' => $request->correo,
+            'password' => Hash::make($request->password),
+            'tipo' => 'Alumno',
+            'genero' => $request->genero,
+            'edad' => $request->edad,
+        ]);
+
+        // Crear alumno vinculado al usuario
+        $alumno = Alumno::create([
+            'idUsuario' => $usuario->idUsuario,
+            'matricula' => $request->matricula,
+            'Institucion_idInstitucion' => $request->Institucion_idInstitucion,
+            'Carreras_idCarrera' => $request->Carreras_idCarrera,
+            'semestre' => $request->semestre,
+            'grupo' => $request->grupo,
+        ]);
 
         return response()->json([
             'message' => 'Alumno creado exitosamente.',
             'alumno' => $alumno,
+            'usuario' => $usuario,
             'status' => 201,
-        ], 201);
+        ]);
     }
 
-    /**
-     * Obtener un alumno por su matrícula.
-     */
-    public function show($matricula)
+    // Actualizar alumno y usuario
+    public function update(Request $request, $idUsuario)
     {
-        $alumno = Alumno::with('usuario')->where('matricula', $matricula)->first();
-
-        if (!$alumno) {
-            return response()->json([
-                'message' => 'Alumno no encontrado.',
-                'status' => 404,
-            ], 404);
-        }
-
-        return response()->json([
-            'alumno' => $alumno,
-            'status' => 200,
-        ], 200);
-    }
-
-    /**
-     * Eliminar un alumno.
-     */
-    public function destroy($matricula)
-    {
-        $alumno = Alumno::where('matricula', $matricula)->first();
-
-        if (!$alumno) {
-            return response()->json([
-                'message' => 'Alumno no encontrado.',
-                'status' => 404,
-            ], 404);
-        }
-
-        $alumno->delete();
-
-        return response()->json([
-            'message' => 'Alumno eliminado exitosamente.',
-            'status' => 200,
-        ], 200);
-    }
-
-    /**
-     * Actualizar un alumno.
-     */
-    public function update(Request $request, $matricula)
-    {
-        $alumno = Alumno::where('matricula', $matricula)->first();
-
-        if (!$alumno) {
-            return response()->json([
-                'message' => 'Alumno no encontrado.',
-                'status' => 404,
-            ], 404);
-        }
+        $alumno = Alumno::findOrFail($idUsuario);
+        $usuario = Usuario::findOrFail($idUsuario);
 
         $validator = Validator::make($request->all(), [
-            'nombres' => 'required|string|max:45',
-            'primer_apellido' => 'required|string|max:45',
+            'nombres' => 'sometimes|string|max:45',
+            'primer_apellido' => 'sometimes|string|max:45',
             'segundo_apellido' => 'nullable|string|max:45',
-            'Institucion_idInstitucion' => 'required|integer',
-            'Carreras_idCarrera' => 'required|integer',
-            'Generaciones_idGeneracion' => 'required|integer',
-            'Grupo_idGrupo' => 'required|integer',
-            'genero' => 'required|string|max:10',
-            'edad' => 'required|integer|min:1',
+            'correo' => 'sometimes|email|unique:usuario,correo,' . $usuario->idUsuario,
+            'password' => 'sometimes|string|min:6',
+            'Institucion_idInstitucion' => 'sometimes|exists:institucion,idInstitucion',
+            'Carreras_idCarrera' => 'sometimes|exists:carrera,idCarrera',
+            'semestre' => 'sometimes|integer|min:1|max:8',
+            'grupo' => 'sometimes|string|max:5',
+            'genero' => 'sometimes|string|max:10',
+            'edad' => 'sometimes|integer|min:1|max:100',
         ]);
 
         if ($validator->fails()) {
@@ -130,15 +103,33 @@ class AlumnoController extends Controller
                 'message' => 'Error en la validación de datos.',
                 'errors' => $validator->errors(),
                 'status' => 422,
-            ], 422);
+            ]);
         }
 
-        $alumno->update($request->all());
+        // Actualizar usuario
+        $usuario->update([
+            'nombres' => $request->nombres ?? $usuario->nombres,
+            'primer_apellido' => $request->primer_apellido ?? $usuario->primer_apellido,
+            'segundo_apellido' => $request->segundo_apellido ?? $usuario->segundo_apellido,
+            'correo' => $request->correo ?? $usuario->correo,
+            'password' => $request->filled('password') ? Hash::make($request->password) : $usuario->password,
+            'genero' => $request->genero ?? $usuario->genero,
+            'edad' => $request->edad ?? $usuario->edad,
+        ]);
+
+        // Actualizar alumno
+        $alumno->update([
+            'Institucion_idInstitucion' => $request->Institucion_idInstitucion ?? $alumno->Institucion_idInstitucion,
+            'Carreras_idCarrera' => $request->Carreras_idCarrera ?? $alumno->Carreras_idCarrera,
+            'semestre' => $request->semestre ?? $alumno->semestre,
+            'grupo' => $request->grupo ?? $alumno->grupo,
+        ]);
 
         return response()->json([
             'message' => 'Alumno actualizado exitosamente.',
             'alumno' => $alumno,
+            'usuario' => $usuario,
             'status' => 200,
-        ], 200);
+        ]);
     }
 }

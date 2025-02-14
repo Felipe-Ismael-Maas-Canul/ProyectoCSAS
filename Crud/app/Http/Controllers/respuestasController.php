@@ -9,142 +9,109 @@ use Illuminate\Support\Facades\Validator;
 
 class RespuestasController extends Controller
 {
+    /**
+     * Muestra todas las respuestas.
+     */
     public function indexRespuestas()
     {
         $respuestas = Respuestas::all();
 
-        $data = [
+        return response()->json([
             'respuestas' => $respuestas,
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 
+    /**
+     * Crea una nueva respuesta.
+     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'idRespuestas' => 'required',
-            'opciones_idOpciones' => 'required',
-            'opciones_pregunta_idPregunta' => 'required',
-            'opciones_pregunta_variable_idVariable' => 'required'
+            'opciones_idOpciones' => 'required|integer|exists:opciones,idOpciones',
+            'opciones_pregunta_idPregunta' => 'required|integer|exists:preguntas,idPregunta',
+            'opciones_pregunta_variable_idVariable' => 'required|integer|exists:variables,idVariable'
         ]);
 
         if ($validator->fails()) {
-            $data = [
+            return response()->json([
                 'message' => 'Error en la validación de datos',
                 'errors' => $validator->errors(),
                 'status' => 400
-            ];
-            return response()->json($data, 400);
+            ], 400);
         }
 
         $respuesta = Respuestas::create([
-            'idRespuestas' => $request->idRespuestas,
             'opciones_idOpciones' => $request->opciones_idOpciones,
             'opciones_pregunta_idPregunta' => $request->opciones_pregunta_idPregunta,
             'opciones_pregunta_variable_idVariable' => $request->opciones_pregunta_variable_idVariable
         ]);
 
-        if (!$respuesta) {
-            $data = [
-                'message' => 'Error al crear la respuesta',
-                'status' => 500
-            ];
-            return response()->json($data, 500);
-        }
-
-        $data = [
-            'message' => $respuesta,
+        return response()->json([
+            'message' => 'Respuesta creada con éxito',
+            'respuesta' => $respuesta,
             'status' => 201
-        ];
-
-        return response()->json($data, 201);
+        ], 201);
     }
 
+    /**
+     * Muestra una respuesta específica.
+     */
     public function show($idRespuestas)
     {
-        $respuesta = Respuestas::where('idRespuestas', $idRespuestas)->first();
+        $respuesta = Respuestas::findOrFail($idRespuestas);
 
-        if (!$respuesta) {
-            $data = [
-                'message' => 'Respuesta no encontrada',
-                'status' => 404
-            ];
-            return response()->json($data, 404);
-        }
-
-        $data = [
+        return response()->json([
             'respuesta' => $respuesta,
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 
+    /**
+     * Elimina una respuesta.
+     */
     public function destroy($idRespuestas)
     {
-        $respuesta = Respuestas::where('idRespuestas', $idRespuestas)->first();
-
-        if (!$respuesta) {
-            $data = [
-                'message' => 'Respuesta no encontrada',
-                'status' => 404
-            ];
-            return response()->json($data, 404);
-        }
-
+        $respuesta = Respuestas::findOrFail($idRespuestas);
         $respuesta->delete();
 
-        $data = [
+        return response()->json([
             'message' => 'Respuesta eliminada',
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 
+    /**
+     * Actualiza una respuesta.
+     */
     public function update(Request $request, $idRespuestas)
     {
-        $respuesta = Respuestas::where('idRespuestas', $idRespuestas)->first();
-
-        if (!$respuesta) {
-            $data = [
-                'message' => 'Respuesta no encontrada',
-                'status' => 404
-            ];
-            return response()->json($data, 404);
-        }
+        $respuesta = Respuestas::findOrFail($idRespuestas);
 
         $validator = Validator::make($request->all(), [
-            'idRespuestas' => 'required',
-            'opciones_idOpciones' => 'required',
-            'opciones_pregunta_idPregunta' => 'required',
-            'opciones_pregunta_variable_idVariable' => 'required'
+            'opciones_idOpciones' => 'required|integer|exists:opciones,idOpciones',
+            'opciones_pregunta_idPregunta' => 'required|integer|exists:preguntas,idPregunta',
+            'opciones_pregunta_variable_idVariable' => 'required|integer|exists:variables,idVariable'
         ]);
 
         if ($validator->fails()) {
-            $data = [
+            return response()->json([
                 'message' => 'Error de validación',
                 'errors' => $validator->errors(),
                 'status' => 400
-            ];
-            return response()->json($data, 400);
+            ], 400);
         }
 
-        $respuesta->idRespuestas = $request->idRespuestas;
-        $respuesta->opciones_idOpciones = $request->opciones_idOpciones;
-        $respuesta->opciones_pregunta_idPregunta = $request->opciones_pregunta_idPregunta;
-        $respuesta->opciones_pregunta_variable_idVariable = $request->opciones_pregunta_variable_idVariable;
+        $respuesta->update([
+            'opciones_idOpciones' => $request->opciones_idOpciones,
+            'opciones_pregunta_idPregunta' => $request->opciones_pregunta_idPregunta,
+            'opciones_pregunta_variable_idVariable' => $request->opciones_pregunta_variable_idVariable
+        ]);
 
-        $respuesta->save();
-
-        $data = [
+        return response()->json([
             'message' => 'Respuesta actualizada',
             'respuesta' => $respuesta,
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 }

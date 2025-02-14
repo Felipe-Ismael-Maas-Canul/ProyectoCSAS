@@ -10,40 +10,24 @@ class Respuestas extends Model{
     use HasFactory;
 
     protected $table = 'respuestas';
+    protected $primaryKey = 'idRespuesta';
 
-    protected $primaryKey= 'idRespuestas';
-
-    protected $fillable =[
-            'idRespuestas',
-            'opciones_idOpciones',
-            'opciones_pregunta_idPregunta',
-            'opciones_pregunta_variable_idVariable'
+    protected $fillable = [
+        'alumno_id',
+        'Encuesta_idEncuesta',
+        'Pregunta_idPregunta',
+        'respuesta_texto',
     ];
-    
-    /**
-     * Relación con el modelo Opciones.
-     * Una respuesta pertenece a una única opción.
-     */
-    public function opciones()
+
+    // Relación con Encuesta (Cada respuesta pertenece a una encuesta)
+    public function encuesta()
     {
-        return $this->belongsTo(Opciones::class, 'opciones_idOpciones', 'idOpciones');
+        return $this->belongsTo(Encuestas::class, 'Encuesta_idEncuesta', 'idEncuesta');
     }
 
-    /**
-     * Relación con el modelo Pregunta.
-     * Una respuesta también se puede asociar con una pregunta a través de la opción.
-     */
+    // Relación con Pregunta (Cada respuesta pertenece a una pregunta)
     public function pregunta()
     {
-        return $this->hasOneThrough(Pregunta::class, Opciones::class, 'idOpciones', 'idPregunta', 'opciones_idOpciones', 'pregunta_idPregunta');
-    }
-
-    /**
-     * Relación con el modelo Variable.
-     * Una respuesta también se puede asociar con una variable a través de la opción.
-     */
-    public function variable()
-    {
-        return $this->hasOneThrough(Variable::class, Opciones::class, 'idOpciones', 'idVariable', 'opciones_idOpciones', 'variable_idVariable');
+        return $this->belongsTo(Pregunta::class, 'Pregunta_idPregunta', 'idPregunta');
     }
 }

@@ -9,142 +9,109 @@ use Illuminate\Support\Facades\Validator;
 
 class OpcionesController extends Controller
 {
+    /**
+     * Muestra todas las opciones.
+     */
     public function indexOpciones()
     {
         $opciones = Opciones::all();
 
-        $data = [
+        return response()->json([
             'opciones' => $opciones,
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 
+    /**
+     * Crea una nueva opción.
+     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'idOpciones' => 'required',
-            'texto' => 'required',
+            'texto' => 'required|string',
             'valor' => 'required|numeric',
-            'pregunta_idPregunta' => 'required'
+            'pregunta_idPregunta' => 'required|integer|exists:preguntas,idPregunta'
         ]);
 
         if ($validator->fails()) {
-            $data = [
+            return response()->json([
                 'message' => 'Error en la validación de datos',
                 'errors' => $validator->errors(),
                 'status' => 400
-            ];
-            return response()->json($data, 400);
+            ], 400);
         }
 
-        $opciones = Opciones::create([
-            'idOpciones' => $request->idOpciones,
+        $opcion = Opciones::create([
             'texto' => $request->texto,
             'valor' => $request->valor,
             'pregunta_idPregunta' => $request->pregunta_idPregunta
         ]);
 
-        if (!$opciones) {
-            $data = [
-                'message' => 'Error al crear la opción',
-                'status' => 500
-            ];
-            return response()->json($data, 500);
-        }
-
-        $data = [
-            'message' => $opciones,
+        return response()->json([
+            'message' => 'Opción creada con éxito',
+            'opcion' => $opcion,
             'status' => 201
-        ];
-
-        return response()->json($data, 201);
+        ], 201);
     }
 
+    /**
+     * Muestra una opción específica.
+     */
     public function show($idOpciones)
     {
-        $opcion = Opciones::where('idOpciones', $idOpciones)->first();
+        $opcion = Opciones::findOrFail($idOpciones);
 
-        if (!$opcion) {
-            $data = [
-                'message' => 'Opción no encontrada',
-                'status' => 404
-            ];
-            return response()->json($data, 404);
-        }
-
-        $data = [
+        return response()->json([
             'opcion' => $opcion,
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 
+    /**
+     * Elimina una opción.
+     */
     public function destroy($idOpciones)
     {
-        $opcion = Opciones::where('idOpciones', $idOpciones)->first();
-
-        if (!$opcion) {
-            $data = [
-                'message' => 'Opción no encontrada',
-                'status' => 404
-            ];
-            return response()->json($data, 404);
-        }
-
+        $opcion = Opciones::findOrFail($idOpciones);
         $opcion->delete();
 
-        $data = [
+        return response()->json([
             'message' => 'Opción eliminada',
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 
+    /**
+     * Actualiza una opción.
+     */
     public function update(Request $request, $idOpciones)
     {
-        $opcion = Opciones::where('idOpciones', $idOpciones)->first();
-
-        if (!$opcion) {
-            $data = [
-                'message' => 'Opción no encontrada',
-                'status' => 404
-            ];
-            return response()->json($data, 404);
-        }
+        $opcion = Opciones::findOrFail($idOpciones);
 
         $validator = Validator::make($request->all(), [
-            'idOpciones' => 'required',
-            'texto' => 'required',
+            'texto' => 'required|string',
             'valor' => 'required|numeric',
-            'pregunta_idPregunta' => 'required'
+            'pregunta_idPregunta' => 'required|integer|exists:preguntas,idPregunta'
         ]);
 
         if ($validator->fails()) {
-            $data = [
+            return response()->json([
                 'message' => 'Error de validación',
                 'errors' => $validator->errors(),
                 'status' => 400
-            ];
-            return response()->json($data, 400);
+            ], 400);
         }
 
-        $opcion->idOpciones = $request->idOpciones;
-        $opcion->texto = $request->texto;
-        $opcion->valor = $request->valor;
-        $opcion->pregunta_idPregunta = $request->pregunta_idPregunta;
+        $opcion->update([
+            'texto' => $request->texto,
+            'valor' => $request->valor,
+            'pregunta_idPregunta' => $request->pregunta_idPregunta
+        ]);
 
-        $opcion->save();
-
-        $data = [
+        return response()->json([
             'message' => 'Opción actualizada',
             'opcion' => $opcion,
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 }

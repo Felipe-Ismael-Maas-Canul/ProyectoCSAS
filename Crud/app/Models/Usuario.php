@@ -2,24 +2,28 @@
 
 namespace App\Models;
 
-use Illuminate\Foundation\Auth\User as Authenticatable; // Cambiar a Authenticatable
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 
-class Usuario extends Authenticatable // Extiende Authenticatable para usar autenticación
+class Usuario extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
-    // Especifica el nombre de la tabla en la base de datos
-    protected $table = 'usuario'; // Nombre de la tabla
+    // Nombre de la tabla en la base de datos
+    protected $table = 'usuario';
 
-    // Define la clave primaria
-    protected $primaryKey = 'idUsuario'; // Clave primaria personalizada
+    // Clave primaria
+    protected $primaryKey = 'idUsuario';
 
-    /**
-     * Campos permitidos para asignación masiva.
-     */
+    // Indicar que es autoincrementable
+    public $incrementing = true;
+
+    // Campos llenables masivamente
     protected $fillable = [
+        'idUsuario',
+        'id_admin',
         'matricula',
         'nombres',
         'primer_apellido',
@@ -27,54 +31,71 @@ class Usuario extends Authenticatable // Extiende Authenticatable para usar aute
         'correo',
         'password',
         'tipo',
-        'Alumno_Matricula',
-        'Administrador_idAdministrador',
         'genero',
         'edad',
     ];
 
-    /**
-     * Ocultar campos sensibles en las respuestas JSON.
-     */
-    protected $hidden = ['password', 'remember_token', 'created_at', 'updated_at'];
+    // Campos ocultos en la salida JSON
+    protected $hidden = [
+        'password',
+        'remember_token',
+        'created_at',
+        'updated_at',
+    ];
 
     /**
      * Relación con el modelo Alumno.
-     * Un usuario puede ser un alumno.
      */
     public function alumno()
     {
-        return $this->hasOne(Alumno::class, 'usuario_id', 'idUsuario');
+        return $this->hasOne(Alumno::class, 'idUsuario', 'idUsuario');
     }
 
     /**
      * Relación con el modelo Administrador.
-     * Un usuario puede ser un administrador.
      */
     public function administrador()
     {
-        return $this->hasOne(Administrador::class, 'usuario_id', 'idUsuario');
+        return $this->hasOne(Administrador::class, 'idAdministrador', 'idUsuario');
     }
 
     /**
-     * Mutador para encriptar la contraseña automáticamente.
+     * Mutador para encriptar automáticamente la contraseña antes de guardarla.
      */
     public function setPasswordAttribute($value)
     {
-        if (!empty($value) && !password_get_info($value)['algo']) {
-            $this->attributes['password'] = bcrypt($value);
-        }
+        $this->attributes['password'] = bcrypt($value);
     }
 
     /**
-     * Configura el campo de autenticación
+     * Método para autenticar por correo en lugar de idUsuario.
      */
     public function getAuthIdentifierName()
     {
-        return 'correo'; // Cambia esto si usas 'correo' en lugar de 'email'
+        return 'correo';
     }
 
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    /**
+     * Método para verificar si el usuario es Alumno.
+     */
+    public function isAlumno()
+    {
+        return $this->tipo === 'Alumno';
+    }
+
+    /**
+     * Método para verificar si el usuario es Administrador.
+     */
+    public function isAdministrador()
+    {
+        return $this->tipo === 'Administrador';
+    }
+
+    /**
+     * Accesor para obtener el tipo de usuario en texto claro.
+     */
+    public function getTipoUsuarioAttribute()
+    {
+        return $this->tipo;
+    }
 }

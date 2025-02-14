@@ -11,132 +11,103 @@ class InstitucionController extends Controller
 {
     public function indexInstituciones()
     {
-        $instituciones = Institucion::all();
-
-        $data = [
-            'instituciones' => $instituciones,
+        return response()->json([
+            'instituciones' => Institucion::all(),
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'idInstitucion' => 'required',
-            'nombre' => 'required'
+            'nombre' => 'required|string|max:100|unique:institucion,nombre',
         ]);
 
         if ($validator->fails()) {
-            $data = [
-                'message' => 'Error en la validación de datos',
+            return response()->json([
+                'message' => 'Error en la validación de datos.',
                 'errors' => $validator->errors(),
                 'status' => 400
-            ];
-            return response()->json($data, 400);
+            ], 400);
         }
 
         $institucion = Institucion::create([
-            'idInstitucion' => $request->idInstitucion,
             'nombre' => $request->nombre
         ]);
 
-        if (!$institucion) {
-            $data = [
-                'message' => 'Error al crear la institución',
-                'status' => 500
-            ];
-            return response()->json($data, 500);
-        }
-
-        $data = [
-            'message' => $institucion,
+        return response()->json([
+            'message' => 'Institución creada exitosamente.',
+            'institucion' => $institucion,
             'status' => 201
-        ];
-
-        return response()->json($data, 201);
+        ], 201);
     }
 
     public function show($idInstitucion)
     {
-        $institucion = Institucion::where('idInstitucion', $idInstitucion)->first();
+        $institucion = Institucion::find($idInstitucion);
 
         if (!$institucion) {
-            $data = [
+            return response()->json([
                 'message' => 'Institución no encontrada',
                 'status' => 404
-            ];
-            return response()->json($data, 404);
+            ], 404);
         }
 
-        $data = [
+        return response()->json([
             'institucion' => $institucion,
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 
     public function destroy($idInstitucion)
     {
-        $institucion = Institucion::where('idInstitucion', $idInstitucion)->first();
+        $institucion = Institucion::find($idInstitucion);
 
         if (!$institucion) {
-            $data = [
+            return response()->json([
                 'message' => 'Institución no encontrada',
                 'status' => 404
-            ];
-            return response()->json($data, 404);
+            ], 404);
         }
 
         $institucion->delete();
 
-        $data = [
-            'message' => 'Institución eliminada',
+        return response()->json([
+            'message' => 'Institución eliminada correctamente',
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 
     public function update(Request $request, $idInstitucion)
     {
-        $institucion = Institucion::where('idInstitucion', $idInstitucion)->first();
+        $institucion = Institucion::find($idInstitucion);
 
         if (!$institucion) {
-            $data = [
+            return response()->json([
                 'message' => 'Institución no encontrada',
                 'status' => 404
-            ];
-            return response()->json($data, 404);
+            ], 404);
         }
 
         $validator = Validator::make($request->all(), [
-            'idInstitucion' => 'required',
-            'nombre' => 'required'
+            'nombre' => 'required|string|max:100|unique:institucion,nombre,'.$idInstitucion.',idInstitucion',
         ]);
 
         if ($validator->fails()) {
-            $data = [
+            return response()->json([
                 'message' => 'Error de validación',
                 'errors' => $validator->errors(),
                 'status' => 400
-            ];
-            return response()->json($data, 400);
+            ], 400);
         }
 
-        $institucion->idInstitucion = $request->idInstitucion;
         $institucion->nombre = $request->nombre;
-
         $institucion->save();
 
-        $data = [
-            'message' => 'Institución actualizada',
+        return response()->json([
+            'message' => 'Institución actualizada correctamente',
             'institucion' => $institucion,
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 }

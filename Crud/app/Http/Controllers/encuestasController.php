@@ -2,149 +2,168 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Encuestas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
-class EncuestasController extends Controller{
+class EncuestasController extends Controller
+{
+    /**
+     * Muestra todas las encuestas.
+     */
     public function indexEncuestas()
     {
-        $encuestas = Encuestas::all();
+        $encuestas = Encuestas::with('categorias')->get(); // Cargar relación con categorías
 
-        $data = [
+        return response()->json([
             'encuestas' => $encuestas,
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 
+    /**
+     * Almacena una nueva encuesta.
+    */
     public function store(Request $request)
     {
+        // Verificar si el usuario es administrador
+        if (!Auth::check() || Auth::user()->tipo !== 'Administrador') {
+            return response()->json([
+                'message' => 'Acceso denegado. Solo administradores pueden crear encuestas.',
+                'status' => 403
+            ], 403);
+        }
+
+        // Validación de datos
         $validator = Validator::make($request->all(), [
-            'idEncuestas' => 'required',
-            'fecha' => 'required|date',
-            'Alumno_Matricula' => 'required',
-            'Respuesta_idRespuesta' => 'required'
+            'titulo' => 'required|string|max:255',
+            'descripcion' => 'nullable|string',
+            'fecha_inicio' => 'required|date',
+            'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
+            'matriculaAlumno' => 'nullable|array', // Lista de alumnos opcional
+            'matriculaAlumno.*' => 'exists:alumno,matricula', // Validar que existan en la tabla alumnos
+            'carrera' => 'required|string',
+            'generaciones_idGeneracion' => 'required|integer|exists:generaciones,idGeneracion',
+            'categorias' => 'nullable|array', // Lista de categorías
+            'categorias.*' => 'exists:categorias,idCategoria' // Validar que las categorías existan
         ]);
 
         if ($validator->fails()) {
-            $data = [
+            return response()->json([
                 'message' => 'Error en la validación de datos',
                 'errors' => $validator->errors(),
                 'status' => 400
-            ];
-            return response()->json($data, 400);
+            ], 400);
         }
 
+        // Crear encuesta
         $encuesta = Encuestas::create([
-            'idEncuestas' => $request->idEncuestas,
-            'fecha' => $request->fecha,
-            'Alumno_Matricula' => $request->Alumno_Matricula,
-            'Respuesta_idRespuesta' => $request->Respuesta_idRespuesta
+            'titulo' => $request->titulo,
+            'descripcion' => $request->descripcion,
+            'fecha_inicio' => $request->fecha_inicio,
+            'fecha_fin' => $request->fecha_fin,
+            'carrera' => $request->carrera,
+            'generaciones_idGeneracion' => $request->generaciones_idGeneracion,
         ]);
 
-        if (!$encuesta) {
-            $data = [
-                'message' => 'Error al crear la encuesta',
-                'status' => 500
-            ];
-            return response()->json($data, 500);
+        // Asignar categorías si se enviaron
+        if (!empty($request->categorias)) {
+            $encuesta->categorias()->sync($request->categorias);
         }
 
-        $data = [
-            'message' => $encuesta,
-            'status' => 201
-        ];
+        // Asignar alumnos si se enviaron
+        if (!empty($request->matriculaAlumno)) {
+            $alumnos = DB::table('alumno')
+                ->select('matricula', 'grupo', 'Carreras_idCarrera') // Sin generaciones_idGeneracion
+                ->whereIn('matricula', $request->matriculaAlumno)
+                ->get();
 
-        return response()->json($data, 201);
+            foreach ($alumnos as $alumno) {
+                DB::table('encuesta_alumno')->insert([
+                    'idEncuesta' => $encuesta->idEncuesta,
+                    'matriculaAlumno' => $alumno->matricula,
+                    'grupo' => $alumno->grupo,
+                    'Carreras_idCarrera' => $alumno->Carreras_idCarrera,
+                    'generaciones_idGeneracion' => $request->generaciones_idGeneracion, // Usamos el dato del request
+                    'fecha_respuesta' => null,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
+        }
+
+        return response()->json([
+            'message' => 'Encuesta creada con éxito',
+            'encuesta' => $encuesta->load('categorias', 'alumnos'), // Cargar relaciones con categorías y alumnos
+            'status' => 201
+        ], 201);
     }
 
-    public function show($idEncuestas)
+
+    /**
+     * Muestra una encuesta específica.
+     */
+    public function show($idEncuesta)
     {
-        $encuesta = Encuestas::where('idEncuestas', $idEncuestas)->first();
+        $encuesta = Encuestas::with('categorias')->findOrFail($idEncuesta); // Cargar relación con categorías
 
-        if (!$encuesta) {
-            $data = [
-                'message' => 'Encuesta no encontrada',
-                'status' => 404
-            ];
-            return response()->json($data, 404);
-        }
-
-        $data = [
+        return response()->json([
             'encuesta' => $encuesta,
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 
-    public function destroy($idEncuestas)
+    /**
+     * Elimina una encuesta.
+     */
+    public function destroy($idEncuesta)
     {
-        $encuesta = Encuestas::where('idEncuestas', $idEncuestas)->first();
-
-        if (!$encuesta) {
-            $data = [
-                'message' => 'Encuesta no encontrada',
-                'status' => 404
-            ];
-            return response()->json($data, 404);
-        }
-
+        $encuesta = Encuestas::findOrFail($idEncuesta);
         $encuesta->delete();
 
-        $data = [
+        return response()->json([
             'message' => 'Encuesta eliminada',
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 
-    public function update(Request $request, $idEncuestas)
+    /**
+     * Actualiza una encuesta.
+     */
+    public function update(Request $request, $idEncuesta)
     {
-        $encuesta = Encuestas::where('idEncuestas', $idEncuestas)->first();
-
-        if (!$encuesta) {
-            $data = [
-                'message' => 'Encuesta no encontrada',
-                'status' => 404
-            ];
-            return response()->json($data, 404);
-        }
+        $encuesta = Encuestas::findOrFail($idEncuesta);
 
         $validator = Validator::make($request->all(), [
-            'idEncuestas' => 'required',
-            'fecha' => 'required|date',
-            'Alumno_Matricula' => 'required',
-            'Respuesta_idRespuesta' => 'required'
+            'titulo' => 'sometimes|required|string|max:255',
+            'descripcion' => 'nullable|string',
+            'fecha_inicio' => 'sometimes|required|date',
+            'fecha_fin' => 'sometimes|required|date|after_or_equal:fecha_inicio',
+            'categorias' => 'nullable|array',
+            'categorias.*' => 'exists:categorias,idCategoria',
         ]);
 
         if ($validator->fails()) {
-            $data = [
+            return response()->json([
                 'message' => 'Error de validación',
                 'errors' => $validator->errors(),
                 'status' => 400
-            ];
-            return response()->json($data, 400);
+            ], 400);
         }
 
-        $encuesta->idEncuestas = $request->idEncuestas;
-        $encuesta->fecha = $request->fecha;
-        $encuesta->Alumno_Matricula = $request->Alumno_Matricula;
-        $encuesta->Respuesta_idRespuesta = $request->Respuesta_idRespuesta;
+        $encuesta->update($request->only(['titulo', 'descripcion', 'fecha_inicio', 'fecha_fin']));
 
-        $encuesta->save();
+        // Actualizar las categorías asociadas
+        if ($request->has('categorias')) {
+            $encuesta->categorias()->sync($request->categorias);
+        }
 
-        $data = [
+        return response()->json([
             'message' => 'Encuesta actualizada',
-            'encuesta' => $encuesta,
+            'encuesta' => $encuesta->load('categorias'), // Cargar relación con categorías
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 }
-

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Institucion extends Model{
-    
+
     use HasFactory;
 
     protected $table = 'institucion';
@@ -15,7 +15,7 @@ class Institucion extends Model{
 
     protected $fillable =[
         'idInstitucion',
-        'nombre' 
+        'nombre'
     ];
 
     /**

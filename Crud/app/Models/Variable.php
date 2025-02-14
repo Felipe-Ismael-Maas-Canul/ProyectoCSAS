@@ -5,15 +5,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Variable extends Model{
-    
+
     use HasFactory;
 
-    protected $table = 'variable';
+    protected $table = 'variable'; // Cambia a plural si la tabla en BD es "variables"
 
-    protected $primaryKey= 'idVariable';
+    protected $primaryKey = 'idVariable';
 
-    protected $fillable =[
-        'idVariable',
+    protected $fillable = [
         'nombre',
         'categoria_idCategoria'
     ];
@@ -29,7 +28,7 @@ class Variable extends Model{
 
     /**
      * Relación con el modelo Pregunta.
-     * Una variable puede tener muchas preguntas asociadas.
+     * Una variable puede estar asociada a varias preguntas.
      */
     public function preguntas()
     {

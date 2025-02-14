@@ -7,144 +7,134 @@ use App\Models\Grupo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class GrupoController extends Controller{
+class GrupoController extends Controller
+{
+    // Obtener todos los grupos
     public function indexGrupos()
     {
         $grupos = Grupo::all();
 
-        $data = [
+        return response()->json([
             'grupos' => $grupos,
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 
+    // Crear un nuevo grupo
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'idGrupo' => 'required',
-            'nombre' => 'required',
-            'generaciones_idGeneracion' => 'required',
-            'idAdministrador' => 'required'
+            'nombre' => 'required|string|regex:/^[A-Z]$/i', // Solo una letra
+            'semestre' => 'required|integer|min:1|max:8',   // Semestre entre 1 y 8
+            'generaciones_idGeneracion' => 'nullable|exists:generaciones,idGeneracion', // Validar relación con generaciones
+            'idAdministrador' => 'nullable|exists:administrador,idAdministrador'       // Validar relación con administrador
         ]);
 
         if ($validator->fails()) {
-            $data = [
+            return response()->json([
                 'message' => 'Error en la validación de datos',
                 'errors' => $validator->errors(),
                 'status' => 400
-            ];
-            return response()->json($data, 400);
+            ], 400);
         }
 
         $grupo = Grupo::create([
-            'idGrupo' => $request->idGrupo,
             'nombre' => $request->nombre,
+            'semestre' => $request->semestre,
             'generaciones_idGeneracion' => $request->generaciones_idGeneracion,
-            'idAdministrador' => $request->idAdministrador
+            'idAdministrador' => $request->idAdministrador,
         ]);
 
         if (!$grupo) {
-            $data = [
+            return response()->json([
                 'message' => 'Error al crear el grupo',
                 'status' => 500
-            ];
-            return response()->json($data, 500);
+            ], 500);
         }
 
-        $data = [
-            'message' => $grupo,
+        return response()->json([
+            'message' => 'Grupo creado exitosamente',
+            'grupo' => $grupo,
             'status' => 201
-        ];
-
-        return response()->json($data, 201);
+        ], 201);
     }
 
+    // Mostrar un grupo específico
     public function show($idGrupo)
     {
-        $grupo = Grupo::where('idGrupo', $idGrupo)->first();
+        $grupo = Grupo::find($idGrupo);
 
         if (!$grupo) {
-            $data = [
+            return response()->json([
                 'message' => 'Grupo no encontrado',
                 'status' => 404
-            ];
-            return response()->json($data, 404);
+            ], 404);
         }
 
-        $data = [
+        return response()->json([
             'grupo' => $grupo,
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 
-    public function destroy($idGrupo)
+    // Actualizar un grupo existente
+    public function update(Request $request, $idGrupo)
     {
-        $grupo = Grupo::where('idGrupo', $idGrupo)->first();
+        $grupo = Grupo::find($idGrupo);
 
         if (!$grupo) {
-            $data = [
+            return response()->json([
                 'message' => 'Grupo no encontrado',
                 'status' => 404
-            ];
-            return response()->json($data, 404);
+            ], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'nombre' => 'required|string|regex:/^[A-Z]$/i', // Solo una letra
+            'semestre' => 'required|integer|min:1|max:8',   // Semestre entre 1 y 8
+            'generaciones_idGeneracion' => 'nullable|exists:generaciones,idGeneracion', // Validar relación con generaciones
+            'idAdministrador' => 'nullable|exists:administrador,idAdministrador',      // Validar relación con administrador
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Error en la validación de datos',
+                'errors' => $validator->errors(),
+                'status' => 400
+            ], 400);
+        }
+
+        $grupo->update([
+            'nombre' => $request->nombre,
+            'semestre' => $request->semestre,
+            'generaciones_idGeneracion' => $request->generaciones_idGeneracion,
+            'idAdministrador' => $request->idAdministrador,
+        ]);
+
+        return response()->json([
+            'message' => 'Grupo actualizado exitosamente',
+            'grupo' => $grupo,
+            'status' => 200
+        ], 200);
+    }
+
+    // Eliminar un grupo
+    public function destroy($idGrupo)
+    {
+        $grupo = Grupo::find($idGrupo);
+
+        if (!$grupo) {
+            return response()->json([
+                'message' => 'Grupo no encontrado',
+                'status' => 404
+            ], 404);
         }
 
         $grupo->delete();
 
-        $data = [
-            'message' => 'Grupo eliminado',
+        return response()->json([
+            'message' => 'Grupo eliminado exitosamente',
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
-    }
-
-    public function update(Request $request, $idGrupo)
-    {
-        $grupo = Grupo::where('idGrupo', $idGrupo)->first();
-
-        if (!$grupo) {
-            $data = [
-                'message' => 'Grupo no encontrado',
-                'status' => 404
-            ];
-            return response()->json($data, 404);
-        }
-
-        $validator = Validator::make($request->all(), [
-            'idGrupo' => 'required',
-            'nombre' => 'required',
-            'generaciones_idGeneracion' => 'required',
-            'idAdministrador' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            $data = [
-                'message' => 'Error de validación',
-                'errors' => $validator->errors(),
-                'status' => 400
-            ];
-            return response()->json($data, 400);
-        }
-
-        $grupo->idGrupo = $request->idGrupo;
-        $grupo->nombre = $request->nombre;
-        $grupo->generaciones_idGeneracion = $request->generaciones_idGeneracion;
-        $grupo->idAdministrador = $request->idAdministrador;
-
-        $grupo->save();
-
-        $data = [
-            'message' => 'Grupo actualizado',
-            'grupo' => $grupo,
-            'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 }
-

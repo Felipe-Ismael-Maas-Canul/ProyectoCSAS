@@ -5,16 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Generacion extends Model{
+class Generacion extends Model
+{
     use HasFactory;
 
-    protected $table = 'generaciones';
+    protected $table = 'generaciones'; // Nombre de la tabla en plural
 
-    protected $primaryKey= 'idGeneracion';
+    protected $primaryKey = 'idGeneracion'; // Llave primaria personalizada
 
     protected $fillable = [
-        'idGeneracion',
-        'nombre',
+        'fecha', // Fecha de generación
     ];
 
     /**
@@ -30,6 +30,6 @@ class Generacion extends Model{
      */
     public function alumnos()
     {
-        return $this->hasMany(Alumno::class, 'Generaciones_idGeneracion', 'idGeneracion');
+        return $this->hasMany(Alumno::class, 'generaciones_idGeneracion', 'idGeneracion');
     }
 }

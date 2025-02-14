@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\authController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,10 +18,10 @@ Route::put('/Usuarios/{idUsuario}', [usuarioController::class, 'update']);
 Route::delete('/Usuarios/{idUsuario}', [usuarioController::class, 'destroy']);
 
 
-// Rutas de autenticación
+// Rutas de Login y logout , y autenticación
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 
 //Controlador Alumno
@@ -50,6 +50,17 @@ Route::post('/Administrador', [administradorController::class, 'store']);
 Route::put('/Administrador/{idAdministrador}', [administradorController::class, 'update']);
 
 Route::delete('/Administrador/{idAdministrador}', [administradorController::class, 'destroy']);
+
+//Para administrador, carrera y grupo
+Route::prefix('administradores')->group(function () {
+    Route::post('{idAdministrador}/carreras', [AdministradorController::class, 'asociarCarreras']);
+
+    Route::post('{idAdministrador}/grupos', [AdministradorController::class, 'asociarGrupos']);
+
+    Route::get('{idAdministrador}/carreras', [AdministradorController::class, 'obtenerCarreras']);
+
+    Route::get('{idAdministrador}/grupos', [AdministradorController::class, 'obtenerGrupos']);
+});
 
 
 // Controlador Carrera
@@ -83,15 +94,17 @@ Route::delete('/Categoria/{idCategoria}', [categoriaController::class, 'destroy'
 // Controlador Encuestas
 use App\Http\Controllers\encuestasController;
 
-Route::get('/Encuestas', [encuestasController::class, 'indexEncuestas']);
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/Encuestas', [EncuestasController::class, 'indexEncuestas']);
 
-Route::get('/Encuestas/{idEncuestas}', [encuestasController::class, 'show']);
+    Route::get('/Encuestas/{idEncuestas}', [EncuestasController::class, 'show']);
 
-Route::post('/Encuestas', [encuestasController::class, 'store']);
+    Route::post('/Encuestas', [EncuestasController::class, 'store']);
 
-Route::put('/Encuestas/{idEncuestas}', [encuestasController::class, 'update']);
+    Route::put('/Encuestas/{idEncuestas}', [EncuestasController::class, 'update']);
 
-Route::delete('/Encuestas/{idEncuestas}', [encuestasController::class, 'destroy']);
+    Route::delete('/Encuestas/{idEncuestas}', [EncuestasController::class, 'destroy']);
+});
 
 
 // Controlador Generacion
@@ -107,7 +120,6 @@ Route::put('/Generaciones/{idGeneracion}', [generacionController::class, 'update
 
 Route::delete('/Generaciones/{idGeneracion}', [generacionController::class, 'destroy']);
 
-
 // Controlador Grupo
 use App\Http\Controllers\grupoController;
 
@@ -120,7 +132,6 @@ Route::post('/Grupos', [grupoController::class, 'store']);
 Route::put('/Grupos/{idGrupo}', [grupoController::class, 'update']);
 
 Route::delete('/Grupos/{idGrupo}', [grupoController::class, 'destroy']);
-
 
 // Controlador Institucion
 use App\Http\Controllers\institucionController;
@@ -153,15 +164,17 @@ Route::delete('/Opciones/{idOpciones}', [opcionesController::class, 'destroy']);
 // Controlador Pregunta
 use App\Http\Controllers\preguntaController;
 
-Route::get('/Pregunta', [preguntaController::class, 'indexPregunta']);
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/Pregunta', [preguntaController::class, 'indexPregunta']);
 
-Route::get('/Pregunta/{idPregunta}', [preguntaController::class, 'show']);
+    Route::get('/Pregunta/{idPregunta}', [preguntaController::class, 'show']);
 
-Route::post('/Pregunta', [preguntaController::class, 'store']);
+    Route::post('/Pregunta', [preguntaController::class, 'store']);
 
-Route::put('/Pregunta/{idPregunta}', [preguntaController::class, 'update']);
+    Route::put('/Pregunta/{idPregunta}', [preguntaController::class, 'update']);
 
-Route::delete('/Pregunta/{idPregunta}', [preguntaController::class, 'destroy']);
+    Route::delete('/Pregunta/{idPregunta}', [preguntaController::class, 'destroy']);
+});
 
 
 // Controlador Respuestas
@@ -190,3 +203,7 @@ Route::post('/Variable', [variableController::class, 'store']);
 Route::put('/Variable/{idVariable}', [variableController::class, 'update']);
 
 Route::delete('/Variable/{idVariable}', [variableController::class, 'destroy']);
+
+
+
+Route::post('/test-password', [AuthController::class, 'testPassword']);

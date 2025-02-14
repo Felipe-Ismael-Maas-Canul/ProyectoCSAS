@@ -5,27 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Opciones extends Model{
-
+class Opciones extends Model
+{
     use HasFactory;
 
     protected $table = 'opciones';
+    protected $primaryKey = 'idOpcion';
 
-    protected $primaryKey= 'idOpciones';
-
-    protected $fillable =[
-        'idOpciones',
+    protected $fillable = [
+        'Pregunta_idPregunta',
         'texto',
-        'valor',
-        'pregunta_idPregunta'
+        'valor' // Este campo puede ser null
     ];
 
-    /**
-     * Relación con el modelo Pregunta.
-     * Una opción pertenece a una única pregunta.
-     */
+    // Relación: Una opción pertenece a una pregunta
     public function pregunta()
     {
-        return $this->belongsTo(Pregunta::class, 'pregunta_idPregunta', 'idPregunta');
+        return $this->belongsTo(Pregunta::class, 'Pregunta_idPregunta', 'idPregunta');
     }
 }

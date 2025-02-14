@@ -13,130 +13,103 @@ class GeneracionController extends Controller
     {
         $generaciones = Generacion::all();
 
-        $data = [
+        return response()->json([
             'generaciones' => $generaciones,
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'idGeneracion' => 'required',
-            'nombre' => 'required'
+            'fecha' => 'required|date|unique:generaciones,fecha',
         ]);
 
         if ($validator->fails()) {
-            $data = [
+            return response()->json([
                 'message' => 'Error en la validación de datos',
                 'errors' => $validator->errors(),
                 'status' => 400
-            ];
-            return response()->json($data, 400);
+            ], 400);
         }
 
         $generacion = Generacion::create([
-            'idGeneracion' => $request->idGeneracion,
-            'nombre' => $request->nombre
+            'fecha' => $request->fecha,
         ]);
 
-        if (!$generacion) {
-            $data = [
-                'message' => 'Error al crear la generación',
-                'status' => 500
-            ];
-            return response()->json($data, 500);
-        }
-
-        $data = [
-            'message' => $generacion,
+        return response()->json([
+            'message' => 'Generación creada exitosamente',
+            'generacion' => $generacion,
             'status' => 201
-        ];
-
-        return response()->json($data, 201);
+        ], 201);
     }
 
     public function show($idGeneracion)
     {
-        $generacion = Generacion::where('idGeneracion', $idGeneracion)->first();
+        $generacion = Generacion::find($idGeneracion);
 
         if (!$generacion) {
-            $data = [
+            return response()->json([
                 'message' => 'Generación no encontrada',
                 'status' => 404
-            ];
-            return response()->json($data, 404);
+            ], 404);
         }
 
-        $data = [
+        return response()->json([
             'generacion' => $generacion,
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 
     public function destroy($idGeneracion)
     {
-        $generacion = Generacion::where('idGeneracion', $idGeneracion)->first();
+        $generacion = Generacion::find($idGeneracion);
 
         if (!$generacion) {
-            $data = [
+            return response()->json([
                 'message' => 'Generación no encontrada',
                 'status' => 404
-            ];
-            return response()->json($data, 404);
+            ], 404);
         }
 
         $generacion->delete();
 
-        $data = [
+        return response()->json([
             'message' => 'Generación eliminada',
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 
     public function update(Request $request, $idGeneracion)
     {
-        $generacion = Generacion::where('idGeneracion', $idGeneracion)->first();
+        $generacion = Generacion::find($idGeneracion);
 
         if (!$generacion) {
-            $data = [
+            return response()->json([
                 'message' => 'Generación no encontrada',
                 'status' => 404
-            ];
-            return response()->json($data, 404);
+            ], 404);
         }
 
         $validator = Validator::make($request->all(), [
-            'idGeneracion' => 'required',
-            'nombre' => 'required'
+            'fecha' => 'required|date|unique:generaciones,fecha,' . $idGeneracion . ',idGeneracion',
         ]);
 
         if ($validator->fails()) {
-            $data = [
+            return response()->json([
                 'message' => 'Error de validación',
                 'errors' => $validator->errors(),
                 'status' => 400
-            ];
-            return response()->json($data, 400);
+            ], 400);
         }
 
-        $generacion->idGeneracion = $request->idGeneracion;
-        $generacion->nombre = $request->nombre;
-
+        $generacion->fecha = $request->fecha;
         $generacion->save();
 
-        $data = [
+        return response()->json([
             'message' => 'Generación actualizada',
             'generacion' => $generacion,
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 }

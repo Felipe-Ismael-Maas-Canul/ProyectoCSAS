@@ -6,141 +6,121 @@ use App\Http\Controllers\Controller;
 use App\Models\Carrera;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use function Laravel\Prompts\error;
 
-class CarreraController extends Controller{
+class CarreraController extends Controller
+{
     public function indexCarrera()
     {
-        $carreras = Carrera::all();
+        $carreras = Carrera::with('institucion')->get();
 
-        $data = [
+        return response()->json([
             'carreras' => $carreras,
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 
     public function store(Request $request)
     {
+        // Validar el request para múltiples carreras
         $validator = Validator::make($request->all(), [
-            'idCarrera' => 'required',
-            'nombre' => 'required',
-            'institucion_idInstitucion' => 'required'
+            'institucion_idInstitucion' => 'required|exists:institucion,idInstitucion',
+            'carreras' => 'required|array|min:1',
+            'carreras.*.nombre' => 'required|string|max:255'
         ]);
 
         if ($validator->fails()) {
-            $data = [
+            return response()->json([
                 'message' => 'Error en la validación de datos',
                 'errors' => $validator->errors(),
                 'status' => 400
-            ];
-            return response()->json($data, 400);
+            ], 400);
         }
 
-        $carrera = Carrera::create([
-            'idCarrera' => $request->idCarrera,
-            'nombre' => $request->nombre,
-            'institucion_idInstitucion' => $request->institucion_idInstitucion
-        ]);
-
-        if (!$carrera) {
-            $data = [
-                'message' => 'Error al crear la carrera',
-                'status' => 500
-            ];
-            return response()->json($data, 500);
+        // Insertar cada carrera en la base de datos
+        $carrerasCreadas = [];
+        foreach ($request->carreras as $carreraData) {
+            $carrera = Carrera::create([
+                'nombre' => $carreraData['nombre'],
+                'institucion_idInstitucion' => $request->institucion_idInstitucion
+            ]);
+            $carrerasCreadas[] = $carrera;
         }
 
-        $data = [
-            'message' => $carrera,
+        return response()->json([
+            'message' => 'Carreras creadas exitosamente',
+            'carreras' => $carrerasCreadas,
             'status' => 201
-        ];
-
-        return response()->json($data, 201);
+        ], 201);
     }
 
     public function show($idCarrera)
     {
-        $carrera = Carrera::where('idCarrera', $idCarrera)->first();
+        $carrera = Carrera::with('institucion')->find($idCarrera);
 
         if (!$carrera) {
-            $data = [
+            return response()->json([
                 'message' => 'Carrera no encontrada',
                 'status' => 404
-            ];
-            return response()->json($data, 404);
+            ], 404);
         }
 
-        $data = [
+        return response()->json([
             'carrera' => $carrera,
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 
     public function destroy($idCarrera)
     {
-        $carrera = Carrera::where('idCarrera', $idCarrera)->first();
+        $carrera = Carrera::find($idCarrera);
 
         if (!$carrera) {
-            $data = [
+            return response()->json([
                 'message' => 'Carrera no encontrada',
                 'status' => 404
-            ];
-            return response()->json($data, 404);
+            ], 404);
         }
 
         $carrera->delete();
 
-        $data = [
+        return response()->json([
             'message' => 'Carrera eliminada',
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 
     public function update(Request $request, $idCarrera)
     {
-        $carrera = Carrera::where('idCarrera', $idCarrera)->first();
+        $carrera = Carrera::find($idCarrera);
         if (!$carrera) {
-            $data = [
+            return response()->json([
                 'message' => 'Carrera no encontrada',
                 'status' => 404
-            ];
-            return response()->json($data, 404);
+            ], 404);
         }
 
         $validator = Validator::make($request->all(), [
-            'idCarrera' => 'required',
-            'nombre' => 'required',
-            'institucion_idInstitucion' => 'required'
+            'nombre' => 'required|string|max:255',
+            'institucion_idInstitucion' => 'required|exists:institucion,idInstitucion'
         ]);
 
         if ($validator->fails()) {
-            $data = [
+            return response()->json([
                 'message' => 'Error de validación',
                 'errors' => $validator->errors(),
                 'status' => 400
-            ];
-            return response()->json($data, 400);
+            ], 400);
         }
 
-        $carrera->idCarrera = $request->idCarrera;
-        $carrera->nombre = $request->nombre;
-        $carrera->institucion_idInstitucion = $request->institucion_idInstitucion;
+        $carrera->update([
+            'nombre' => $request->nombre,
+            'institucion_idInstitucion' => $request->institucion_idInstitucion
+        ]);
 
-        $carrera->save();
-
-        $data = [
+        return response()->json([
             'message' => 'Carrera actualizada',
             'carrera' => $carrera,
             'status' => 200
-        ];
-
-        return response()->json($data, 200);
+        ], 200);
     }
 }
-
